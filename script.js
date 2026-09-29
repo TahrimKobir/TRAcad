@@ -144,25 +144,22 @@ $("downloadBtn").addEventListener("click", async () => {
   button.disabled = true;
   button.innerHTML = "Generating PDF…";
 
-  const rawTitle = getValue("title") || "sau-assignment-cover";
-  const formattedTitle = rawTitle
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .toLowerCase();
+  // Enforced file name requested by user
+  const fileName = "PPATH 312(P) Cover by TRAcad-.pdf";
 
   const options = {
     margin: 0,
-    filename: `${formattedTitle}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
+    filename: fileName,
+    image: { type: "jpeg", quality: 1.0 },
     html2canvas: { 
-      scale: 3, 
+      scale: 2, 
       useCORS: true, 
       backgroundColor: "#ffffff",
-      logging: false
+      windowWidth: 800, // Forces full render context to prevent CSS clipping
+      scrollY: 0
     },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    pagebreak: { mode: ["avoid-all"] }
+    // Using precise pixel coordinates ensures the 595x842 element matches the A4 PDF bounds 1:1
+    jsPDF: { unit: "px", format: [595, 842], orientation: "portrait", hotfixes: ["px_scaling"] }
   };
 
   try {
@@ -176,8 +173,3 @@ $("downloadBtn").addEventListener("click", async () => {
     button.innerHTML = originalHtml;
   }
 });
-
-// Initialize Application State
-if (!loadLocal()) loadDefaults();
-else updatePreview();
-restoreLogo();
