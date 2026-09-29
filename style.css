@@ -233,21 +233,8 @@ footer {
   font-size: 12px;
 }
 
-/* Responsive UI Adjustments */
-@media (max-width: 1080px) {
-  .workspace { grid-template-columns: 380px 1fr; }
-  .cover.sau { transform: scale(.84); transform-origin: center top; margin-bottom: -110px; }
-}
-@media (max-width: 840px) {
-  .workspace { grid-template-columns: 1fr; }
-  .preview-panel { position: static; }
-  .hero { flex-direction: column; align-items: flex-start; }
-  .hero-badge { text-align: left; }
-}
-
-
 /* =========================================================
-   EXACT SAU ASSIGNMENT COVER CANVAS (SPECIFIED TYPOGRAPHY)
+   EXACT SAU ASSIGNMENT COVER CANVAS (STRUCTURED & BALANCED)
    ========================================================= */
 
 .cover.sau {
@@ -309,18 +296,19 @@ footer {
   align-items: center;
   z-index: 2;
   box-sizing: border-box;
+  height: calc(100% - 36px);
 }
 
 /* University Crest Logo */
 .cover.sau .sau-header {
   text-align: center;
-  margin-top: 4px;
-  margin-bottom: 12px;
+  margin-top: 2px;
+  margin-bottom: 10px;
 }
 
 .cover.sau .preview-logo {
-  width: 168px;
-  height: 168px;
+  width: 155px;
+  height: 155px;
   object-fit: contain;
   display: block;
   margin: 0 auto;
@@ -330,14 +318,14 @@ footer {
 .cover.sau .sau-doc-badge {
   background: #112738;
   color: #ffffff;
-  padding: 6px 36px;
+  padding: 5px 34px;
   margin-bottom: 6px;
   border-radius: 1px;
 }
 
 .cover.sau .sau-doc-badge span {
   font-family: 'Krungthep', 'Trebuchet MS', 'Arial Black', sans-serif;
-  font-size: 24px;
+  font-size: 23px;
   font-weight: 700;
   letter-spacing: 0.5px;
   display: block;
@@ -346,8 +334,8 @@ footer {
 
 /* Flourish Ornament */
 .cover.sau .sau-ornament {
-  margin-bottom: 12px;
-  height: 28px;
+  margin-bottom: 10px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -359,14 +347,14 @@ footer {
   border-top: 2px solid #1b5c7d;
   border-bottom: 2px solid #1b5c7d;
   padding: 8px 10px;
-  margin-bottom: 22px;
+  margin-bottom: 18px;
   text-align: center;
 }
 
 .cover.sau .preview-title {
   margin: 0;
   font-family: 'Krungthep', 'Trebuchet MS', 'Arial Black', sans-serif;
-  font-size: 21px;
+  font-size: 20px;
   font-weight: 700;
   color: #0a1f33;
   line-height: 1.25;
@@ -374,15 +362,15 @@ footer {
 
 /* 3. COURSE DETAILS -> FONT: Romelio Sans */
 .cover.sau .sau-course-box {
-  width: 86%;
+  width: 88%;
   border: 1px solid #000000;
   padding: 8px 12px;
-  margin: 0 auto 24px;
+  margin: 0 auto 18px;
   text-align: center;
   background: rgba(255, 255, 255, 0.95);
   font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
-  font-size: 15px;
-  line-height: 1.4;
+  font-size: 14.5px;
+  line-height: 1.45;
   color: #000000;
   font-weight: 600;
 }
@@ -391,22 +379,24 @@ footer {
   font-weight: 400;
 }
 
-/* 4. STUDENT AND TEACHER INFO -> FONT: Romelio Sans */
+/* 4. STUDENT AND TEACHER INFO GRID (BALANCED & EXTENDED) -> FONT: Romelio Sans */
 .cover.sau .sau-submission-grid {
   width: 100%;
+  flex: 1; /* Fills remaining height automatically */
   display: grid;
   grid-template-columns: 1fr 1fr;
   position: relative;
   border-top: 2px solid #1b5c7d;
-  padding-top: 10px;
-  margin-bottom: auto;
+  padding-top: 14px;
+  margin-bottom: 14px;
 }
 
+/* Central Divider Line stretching full grid height */
 .cover.sau .sau-submission-grid::before {
   content: "";
   position: absolute;
   top: 0;
-  bottom: -4px;
+  bottom: 0;
   left: 50%;
   width: 2px;
   background-color: #1b5c7d;
@@ -418,7 +408,7 @@ footer {
   flex-direction: column;
   font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
   color: #000000;
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
 .cover.sau .sau-column.assigned {
@@ -434,7 +424,7 @@ footer {
   font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
   font-size: 18px;
   font-weight: 800;
-  margin: 0 0 12px 0;
+  margin: 0 0 14px 0;
   color: #000000;
 }
 
@@ -442,14 +432,14 @@ footer {
   font-weight: 700;
   font-size: 13.5px;
   color: #000000;
-  margin-bottom: 2px;
+  margin-bottom: 5px;
 }
 
 .cover.sau .sau-column .row-text {
   font-weight: 700;
   font-size: 13px;
   color: #000000;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .cover.sau .sau-column .lbl {
@@ -458,12 +448,13 @@ footer {
 }
 
 .cover.sau .sau-column .sau-spacer {
-  height: 24px;
+  flex: 1; /* Expands spacer to push lower teacher info down gracefully */
+  min-height: 20px;
 }
 
 /* 5. VARSITY NAME (BOTTOM BOX) -> FONT: BatmanForeverAlternate */
 .cover.sau .sau-footer-brand {
-  width: 98%;
+  width: 100%;
   border: 1.5px solid #1b5c7d;
   outline: 1.5px solid #1b5c7d;
   outline-offset: 2px;
@@ -482,12 +473,12 @@ footer {
 /* Central Watermark */
 .cover.sau .sau-watermark {
   position: absolute;
-  top: 52%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 280px;
-  height: 280px;
-  opacity: 0.10;
+  width: 270px;
+  height: 270px;
+  opacity: 0.08;
   pointer-events: none;
   z-index: 1;
 }
