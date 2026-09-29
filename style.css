@@ -302,7 +302,7 @@ footer {
   margin: 0 auto;
 }
 
-/* 1. DOCUMENT BADGE ("Assignment") -> FONT: Krungthep */
+/* 1. DOCUMENT BADGE ("Assignment") */
 .cover.sau .sau-doc-badge {
   background: #112738;
   color: #ffffff;
@@ -320,18 +320,19 @@ footer {
   line-height: 1.1;
 }
 
-/* Flourish Ornament */
-.cover.sau .sau-ornament {
-  margin-bottom: 10px;
-  height: 24px;
+/* Flourish Ornaments */
+.cover.sau .sau-ornaments {
   display: flex;
+  gap: 12px;
   align-items: center;
   justify-content: center;
+  margin-bottom: 10px;
+  height: 24px;
 }
 
-/* 2. ASSIGNMENT TITLE -> FONT: Krungthep */
+/* 2. ASSIGNMENT TITLE */
 .cover.sau .sau-title-wrap {
-  width: 100%;
+  width: 90%;
   border-top: 2px solid #1b5c7d;
   border-bottom: 2px solid #1b5c7d;
   padding: 8px 10px;
@@ -348,7 +349,7 @@ footer {
   line-height: 1.25;
 }
 
-/* 3. COURSE DETAILS -> FONT: Romelio Sans */
+/* 3. COURSE DETAILS */
 .cover.sau .sau-course-box {
   width: 88%;
   border: 1px solid #000000;
@@ -367,11 +368,9 @@ footer {
   font-weight: 400;
 }
 
-/* 4. STUDENT AND TEACHER INFO GRID (BALANCED & EXTENDED) */
-.cover.sau .sau-submission-grid {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+/* 4. STRUCTURED SUBMISSION GRID */
+.cover.sau .sau-submission-wrapper {
+  width: 90%;
   margin-top: 10px;
   font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
   font-size: 13.5px;
@@ -379,8 +378,38 @@ footer {
   flex: 1;
 }
 
-.cover.sau .sau-column { width: 46%; }
-.cover.sau .sau-column h4 { font-size: 16px; font-weight: 700; margin: 0 0 8px; border-bottom: 1px solid #000; padding-bottom: 4px; display: inline-block; }
+.cover.sau .grid-header {
+  display: flex;
+  width: 100%;
+  border-top: 2px solid #1b5c7d;
+  border-bottom: 2px solid #1b5c7d;
+  padding: 8px 0;
+}
+
+.cover.sau .grid-header > div {
+  width: 50%;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cover.sau .grid-body {
+  display: flex;
+  width: 100%;
+  padding: 12px 0;
+  border-bottom: 2px solid #1b5c7d;
+}
+
+.cover.sau .col-left {
+  width: 50%;
+  border-right: 2px solid #1b5c7d;
+  padding-right: 15px;
+}
+
+.cover.sau .col-right {
+  width: 50%;
+  padding-left: 20px;
+}
+
 .cover.sau .bold-text { font-weight: 600; }
 .cover.sau .row-text { display: flex; gap: 4px; }
 .cover.sau .row-text .lbl { font-weight: 600; }
