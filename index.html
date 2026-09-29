@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free academic assignment cover generator">
+  <title>Assignment Cover Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">AC</div>
+      <div>
+        <strong>Assignment Cover</strong>
+        <span>Free Cover Generator</span>
+      </div>
+    </div>
+    <a class="github-link" href="https://github.com/" target="_blank" rel="noopener">GitHub Pages Ready ↗</a>
+  </header>
+
+  <main class="app-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">ACADEMIC TOOL</p>
+        <h1>Create a professional assignment cover in seconds.</h1>
+        <p class="hero-text">Enter your academic information, choose a design, preview it live, and download a print-ready PDF.</p>
+      </div>
+      <div class="hero-badge">100% Free<br><small>No account required</small></div>
+    </section>
+
+    <div class="workspace">
+      <aside class="panel form-panel">
+        <div class="panel-heading">
+          <div>
+            <span class="step">01</span>
+            <h2>Enter Information</h2>
+          </div>
+          <button id="resetBtn" class="text-btn" type="button">Reset</button>
+        </div>
+
+        <form id="coverForm">
+          <div class="field-group">
+            <label for="institution">Institution / University</label>
+            <input id="institution" type="text" placeholder="e.g. Sylhet Agricultural University">
+          </div>
+
+          <div class="field-group">
+            <label for="department">Department</label>
+            <input id="department" type="text" placeholder="e.g. Department of Agriculture">
+          </div>
+
+          <div class="field-group">
+            <label for="courseName">Course Name</label>
+            <input id="courseName" type="text" placeholder="e.g. Extension Communication & Group Approaches">
+          </div>
+
+          <div class="grid-2">
+            <div class="field-group">
+              <label for="documentType">Document Type</label>
+              <select id="documentType">
+                <option>Assignment</option>
+                <option>Lab Report</option>
+                <option>Term Paper</option>
+                <option>Project Report</option>
+                <option>Class Report</option>
+                <option>Seminar Paper</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="courseCode">Course Code</label>
+              <input id="courseCode" type="text" placeholder="e.g. AGR 301">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="title">Title / Topic</label>
+            <textarea id="title" rows="3" placeholder="Enter your assignment title"></textarea>
+          </div>
+
+          <div class="section-label">Student Information</div>
+          <div class="grid-2">
+            <div class="field-group">
+              <label for="studentName">Name</label>
+              <input id="studentName" type="text" placeholder="Your full name">
+            </div>
+            <div class="field-group">
+              <label for="studentId">ID / Roll</label>
+              <input id="studentId" type="text" placeholder="Student ID">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field-group">
+              <label for="level">Level / Year</label>
+              <input id="level" type="text" placeholder="e.g. Level 3">
+            </div>
+            <div class="field-group">
+              <label for="semester">Semester</label>
+              <input id="semester" type="text" placeholder="e.g. Semester 1">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="session">Session</label>
+            <input id="session" type="text" placeholder="e.g. 2023–24">
+          </div>
+
+          <div class="section-label">Submission Information</div>
+          <div class="field-group">
+            <label for="teacherName">Submitted To</label>
+            <input id="teacherName" type="text" placeholder="Teacher / Supervisor name">
+          </div>
+
+          <div class="field-group">
+            <label for="teacherDesignation">Designation</label>
+            <input id="teacherDesignation" type="text" placeholder="e.g. Professor, Department of Agriculture">
+          </div>
+
+          <div class="field-group">
+            <label for="submissionDate">Submission Date</label>
+            <input id="submissionDate" type="date">
+          </div>
+
+          <div class="section-label">Appearance</div>
+          <div class="field-group">
+            <label for="template">Template</label>
+            <select id="template">
+              <option value="sau">SAU Assignment</option>
+              <option value="classic">Classic Academic</option>
+              <option value="modern">Modern Minimal</option>
+              <option value="elegant">Elegant</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label>Institution Logo <span class="optional">optional</span></label>
+            <label class="upload-box" for="logoInput">
+              <span class="upload-icon">＋</span>
+              <span id="logoLabel">Upload logo (PNG/JPG)</span>
+              <input id="logoInput" type="file" accept="image/png,image/jpeg,image/webp">
+            </label>
+          </div>
+
+          <div class="actions">
+            <button id="downloadBtn" class="primary-btn" type="button">Download PDF <span>↓</span></button>
+            <button id="printBtn" class="secondary-btn" type="button">Print</button>
+          </div>
+        </form>
+      </aside>
+
+      <section class="panel preview-panel">
+        <div class="panel-heading">
+          <div>
+            <span class="step">02</span>
+            <h2>Live Preview</h2>
+          </div>
+          <span class="a4-label">A4 • Portrait</span>
+        </div>
+
+        <div class="preview-stage">
+          <div id="cover" class="cover sau">
+            <div class="cover-border"></div>
+            <div class="cover-inner">
+              <div class="sau-header">
+                <img id="previewLogo" class="preview-logo hidden" alt="Institution logo">
+                <div id="previewInstitution" class="institution">SYLHET AGRICULTURAL UNIVERSITY</div>
+                <div id="previewDepartment" class="department">Department Name</div>
+              </div>
+
+              <div class="sau-doc-badge"><span id="previewType">Assignment</span></div>
+              <div class="sau-ornament">❧</div>
+
+              <div class="sau-title-wrap">
+                <h3 id="previewTitle" class="preview-title">Assignment Title</h3>
+              </div>
+
+              <div class="sau-course-box">
+                <div>Course Name: <strong id="previewCourseName">Extension Communication &amp; Group Approaches</strong></div>
+                <div>Course Code: <strong id="previewCourseCode">AGEXT 211</strong></div>
+              </div>
+
+              <div class="sau-separator"></div>
+
+              <div class="sau-submission-grid">
+                <div class="sau-column assigned">
+                  <h4>Assigned By</h4>
+                  <strong id="previewTeacher">Course teacher name</strong>
+                  <span id="previewDesignation">Designation</span>
+                  <span id="previewDepartment2">Department Name</span>
+                  <span class="sau-spacer"></span>
+                  <span id="previewFooterInstitution">Sylhet Agricultural University</span>
+                  <span>Sylhet-3100</span>
+                </div>
+
+                <div class="sau-column submitted">
+                  <h4>Submitted By</h4>
+                  <strong id="previewStudent">Student name</strong>
+                  <span>ID: <b id="previewId">1234567</b></span>
+                  <span>Reg: <b id="previewReg">1234</b></span>
+                  <span>Level: <b id="previewLevel">00</b></span>
+                  <span>Semester: <b id="previewSemester">00</b></span>
+                  <span>Session: <b id="previewSession">2022–23</b></span>
+                </div>
+              </div>
+
+              <div class="sau-footer-brand" id="previewFooterBrand">SYLHET AGRICULTURAL UNIVERSITY, SYLHET</div>
+            </div>
+            <div class="sau-watermark" aria-hidden="true">
+              <img id="watermarkLogo" class="hidden" alt="">
+            </div>
+          </div>
+        </div>
+        <p class="preview-note">Tip: Your information stays in this browser. Nothing is uploaded to a server.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <span>Assignment Cover Generator</span>
+    <span>Built for students • Free & open-source</span>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
