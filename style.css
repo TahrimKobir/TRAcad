@@ -237,10 +237,10 @@ footer {
   box-sizing: border-box;
 }
 
-/* Outer Double Border with Corner Accents */
+/* Outer Double Border with Corner Accents (MADE SMALLER/MORE INWARD) */
 .cover.sau .sau-frame {
   position: absolute;
-  inset: 12px;
+  inset: 18px; /* Increased from 12px to shrink the outer boundary */
   border: 2px solid #0f2b5c;
   pointer-events: none;
   z-index: 3;
@@ -277,21 +277,21 @@ footer {
 /* Inner Content Container */
 .cover.sau .cover-inner {
   position: absolute;
-  inset: 18px;
-  padding: 18px 28px 20px;
+  inset: 26px; /* Adjusted to fit inside the new smaller frame */
+  padding: 16px 24px 22px;
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 2;
   box-sizing: border-box;
-  height: calc(100% - 36px);
+  height: calc(100% - 52px); /* Adjusted for the new inset */
 }
 
 /* University Crest Logo */
 .cover.sau .sau-header {
   text-align: center;
-  margin-top: 2px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }
 
 .cover.sau .preview-logo {
@@ -307,7 +307,7 @@ footer {
   background: #112738;
   color: #ffffff;
   padding: 5px 34px;
-  margin-bottom: 6px;
+  margin-bottom: 20px;
   border-radius: 1px;
 }
 
@@ -326,7 +326,7 @@ footer {
   gap: 12px;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
   height: 24px;
 }
 
@@ -335,8 +335,8 @@ footer {
   width: 90%;
   border-top: 2px solid #1b5c7d;
   border-bottom: 2px solid #1b5c7d;
-  padding: 8px 10px;
-  margin-bottom: 18px;
+  padding: 10px 10px;
+  margin-bottom: 25px;
   text-align: center;
 }
 
@@ -353,8 +353,11 @@ footer {
 .cover.sau .sau-course-box {
   width: 88%;
   border: 1px solid #000000;
-  padding: 8px 12px;
-  margin: 0 auto 18px;
+  padding: 10px 12px;
+  
+  /* Acts as a spring to push the submission block down and distribute space */
+  margin: 0 auto auto auto; 
+  
   text-align: center;
   background: rgba(255, 255, 255, 0.95);
   font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
@@ -368,52 +371,69 @@ footer {
   font-weight: 400;
 }
 
-/* 4. STRUCTURED SUBMISSION GRID */
+/* =========================================================
+   4. STRUCTURED SUBMISSION GRID (SOPHISTICATED DESIGN)
+   ========================================================= */
 .cover.sau .sau-submission-wrapper {
-  width: 90%;
-  margin-top: 10px;
+  width: 92%;
+  margin-bottom: 30px; /* Positions perfectly above the bottom footer */
   font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
   font-size: 13.5px;
-  line-height: 1.45;
-  flex: 1;
+  line-height: 1.5;
+  
+  /* Sophisticated Rounded Border Box */
+  border: 1.5px solid #1b5c7d;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(27, 92, 125, 0.04);
+  background: #ffffff;
 }
 
+/* Refined Table Header */
 .cover.sau .grid-header {
   display: flex;
   width: 100%;
-  border-top: 2px solid #1b5c7d;
-  border-bottom: 2px solid #1b5c7d;
-  padding: 8px 0;
+  background: rgba(27, 92, 125, 0.06);
+  border-bottom: 1.5px solid #1b5c7d;
+  padding: 10px 0;
 }
 
 .cover.sau .grid-header > div {
   width: 50%;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #0f2b5c;
 }
+
+.cover.sau .grid-header .col-left { padding-left: 25px; }
+.cover.sau .grid-header .col-right { padding-left: 25px; }
 
 .cover.sau .grid-body {
   display: flex;
   width: 100%;
-  padding: 12px 0;
-  border-bottom: 2px solid #1b5c7d;
+  padding: 16px 0;
 }
 
+/* Softened Divider Line */
 .cover.sau .col-left {
   width: 50%;
-  border-right: 2px solid #1b5c7d;
-  padding-right: 15px;
+  border-right: 1.5px dashed rgba(27, 92, 125, 0.35); /* Sophisticated dashed line */
+  padding-right: 20px;
+  padding-left: 25px;
 }
 
 .cover.sau .col-right {
   width: 50%;
-  padding-left: 20px;
+  padding-left: 25px;
+  padding-right: 15px;
 }
 
-.cover.sau .bold-text { font-weight: 600; }
-.cover.sau .row-text { display: flex; gap: 4px; }
-.cover.sau .row-text .lbl { font-weight: 600; }
-.cover.sau .sau-spacer { height: 16px; }
+.cover.sau .bold-text { font-weight: 600; color: #111; }
+.cover.sau .row-text { display: flex; gap: 6px; margin-bottom: 3px; }
+.cover.sau .row-text .lbl { font-weight: 600; color: #333; }
+.cover.sau .sau-spacer { height: 18px; }
 
 /* Bottom Double-Bordered Footer Box */
 .cover.sau .sau-footer-brand {
@@ -424,7 +444,7 @@ footer {
   font-family: 'BatmanForeverAlternate', 'Impact', sans-serif;
   font-size: 15px;
   letter-spacing: 1px;
-  margin-top: auto;
+  margin-top: 0;
 }
 
 /* Light Centered Watermark Logo */
