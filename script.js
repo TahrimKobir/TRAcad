@@ -137,33 +137,36 @@ $("printBtn").addEventListener("click", () => {
   window.print();
 });
 
-// PDF Downloader (300 DPI High-Quality Output)
+// PDF Downloader (Fixed A4 Alignment & Multi-page Prevention)
 $("downloadBtn").addEventListener("click", async () => {
   const button = $("downloadBtn");
   const originalHtml = button.innerHTML;
   button.disabled = true;
   button.innerHTML = "Generating PDF…";
 
-  // Enforced file name requested by user
-  const fileName = "PPATH 312(P) Cover by TRAcad-.pdf";
+  const fileName = "PPATH 312(P) Cover by TRAcad.pdf";
+  const element = $("cover");
 
   const options = {
     margin: 0,
     filename: fileName,
-    image: { type: "jpeg", quality: 1.0 },
+    image: { type: "jpeg", quality: 0.98 },
     html2canvas: { 
-      scale: 2, 
-      useCORS: true, 
-      backgroundColor: "#ffffff",
-      windowWidth: 800, // Forces full render context to prevent CSS clipping
+      scale: 2,           // 2x scale for sharp text output
+      useCORS: true,      // Ensures logo/external images load properly
+      scrollX: 0,
       scrollY: 0
     },
-    // Using precise pixel coordinates ensures the 595x842 element matches the A4 PDF bounds 1:1
-    jsPDF: { unit: "px", format: [595, 842], orientation: "portrait", hotfixes: ["px_scaling"] }
+    jsPDF: { 
+      unit: "mm", 
+      format: "a4", 
+      orientation: "portrait" 
+    },
+    pagebreak: { mode: "avoid-all" } // Forces content to remain on a single page
   };
 
   try {
-    await html2pdf().set(options).from($("cover")).save();
+    await html2pdf().set(options).from(element).save();
   } catch (error) {
     console.error("PDF generation failed:", error);
     alert("Direct PDF export failed. Using window print fallback.");
