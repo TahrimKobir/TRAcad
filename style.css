@@ -221,18 +221,37 @@ footer {
 }
 .footer-content strong { color: var(--ink); }
 
+
 /* =========================================================
    EXACT ASSIGNMENT COVER CANVAS (STRUCTURED & BALANCED)
    ========================================================= */
 
+/* Print Page Rules for PDF Generators */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+/* Exact A4 dimensions for print & PDF generation */
+#cover {
+  width: 210mm;
+  height: 297mm; /* Standard A4 height */
+  box-sizing: border-box;
+  background-color: #ffffff;
+  margin: 0 auto;
+  overflow: hidden; /* Prevents split pages */
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+
 .cover.sau {
-  width: 595px;
-  height: 842px;
+  width: 100%;  /* Updated to fill A4 wrapper dynamically */
+  height: 100%; /* Updated to fill A4 wrapper dynamically */
   flex: 0 0 auto;
   position: relative;
   background: #ffffff;
   color: #000000;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: none; /* Removed box-shadow to prevent clipping in PDF prints */
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -240,7 +259,7 @@ footer {
 /* Outer Double Border with Corner Accents (MADE SMALLER/MORE INWARD) */
 .cover.sau .sau-frame {
   position: absolute;
-  inset: 18px; /* Increased from 12px to shrink the outer boundary */
+  inset: 18px; 
   border: 2px solid #0f2b5c;
   pointer-events: none;
   z-index: 3;
@@ -277,14 +296,14 @@ footer {
 /* Inner Content Container */
 .cover.sau .cover-inner {
   position: absolute;
-  inset: 26px; /* Adjusted to fit inside the new smaller frame */
+  inset: 26px; 
   padding: 16px 24px 22px;
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 2;
   box-sizing: border-box;
-  height: calc(100% - 52px); /* Adjusted for the new inset */
+  height: calc(100% - 52px); 
 }
 
 /* University Crest Logo */
@@ -354,10 +373,7 @@ footer {
   width: 88%;
   border: 1px solid #000000;
   padding: 10px 12px;
-  
-  /* Acts as a spring to push the submission block down and distribute space */
   margin: 0 auto auto auto; 
-  
   text-align: center;
   background: rgba(255, 255, 255, 0.95);
   font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
@@ -376,12 +392,10 @@ footer {
    ========================================================= */
 .cover.sau .sau-submission-wrapper {
   width: 92%;
-  margin-bottom: 30px; /* Positions perfectly above the bottom footer */
+  margin-bottom: 30px;
   font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
   font-size: 13.5px;
   line-height: 1.5;
-  
-  /* Sophisticated Rounded Border Box */
   border: 1.5px solid #1b5c7d;
   border-radius: 8px;
   overflow: hidden;
@@ -419,7 +433,7 @@ footer {
 /* Softened Divider Line */
 .cover.sau .col-left {
   width: 50%;
-  border-right: 1.5px dashed rgba(27, 92, 125, 0.35); /* Sophisticated dashed line */
+  border-right: 1.5px dashed rgba(27, 92, 125, 0.35);
   padding-right: 20px;
   padding-left: 25px;
 }
@@ -447,17 +461,18 @@ footer {
   margin-top: 0;
 }
 
-/* Light Centered Watermark Logo */
+/* Light Centered Watermark Logo (Updated: Smaller & Lower Transparency) */
 .cover.sau .sau-watermark {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  opacity: 0.04;
+  opacity: 0.02; /* Updated transparency */
   z-index: 1;
   pointer-events: none;
 }
 .cover.sau .sau-watermark img {
-  width: 450px;
-  height: 450px;
+  width: 320px;  /* Updated size */
+  height: 320px; /* Updated size */
+  object-fit: contain;
 }
