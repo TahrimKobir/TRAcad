@@ -1,4 +1,28 @@
 /* =========================================================
+   CUSTOM FONT DEFINITIONS
+   ========================================================= */
+@font-face {
+  font-family: 'Krungthep';
+  src: local('Krungthep'), url('fonts/Krungthep.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Romelio Sans';
+  src: local('Romelio Sans'), local('RomelioSans'), url('fonts/RomelioSans.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BatmanForeverAlternate';
+  src: local('Batman Forever Alternate'), local('BatmanForeverAlternate'), url('fonts/BatmanForeverAlternate.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* =========================================================
    CORE UI STYLES & APPLICATION LAYOUT
    ========================================================= */
 :root {
@@ -223,7 +247,7 @@ footer {
 
 
 /* =========================================================
-   EXACT SAU ASSIGNMENT COVER SHEET (REFERENCE CANVAS)
+   EXACT SAU ASSIGNMENT COVER CANVAS (SPECIFIED TYPOGRAPHY)
    ========================================================= */
 
 .cover.sau {
@@ -254,7 +278,7 @@ footer {
   border: 1px solid #0f2b5c;
 }
 
-/* 4 Decorative Corner Square Accents */
+/* Corner Accents */
 .cover.sau .corner-box {
   position: absolute;
   width: 12px;
@@ -302,20 +326,20 @@ footer {
   margin: 0 auto;
 }
 
-/* Document Badge ("Assignment") */
+/* 1. DOCUMENT BADGE ("Assignment") -> FONT: Krungthep */
 .cover.sau .sau-doc-badge {
   background: #112738;
   color: #ffffff;
-  padding: 5px 36px;
+  padding: 6px 36px;
   margin-bottom: 6px;
   border-radius: 1px;
 }
 
 .cover.sau .sau-doc-badge span {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 25px;
+  font-family: 'Krungthep', 'Trebuchet MS', 'Arial Black', sans-serif;
+  font-size: 24px;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.5px;
   display: block;
   line-height: 1.1;
 }
@@ -329,7 +353,7 @@ footer {
   justify-content: center;
 }
 
-/* Assignment Title Section */
+/* 2. ASSIGNMENT TITLE -> FONT: Krungthep */
 .cover.sau .sau-title-wrap {
   width: 100%;
   border-top: 2px solid #1b5c7d;
@@ -341,14 +365,14 @@ footer {
 
 .cover.sau .preview-title {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Krungthep', 'Trebuchet MS', 'Arial Black', sans-serif;
   font-size: 21px;
   font-weight: 700;
   color: #0a1f33;
   line-height: 1.25;
 }
 
-/* Course Details Box */
+/* 3. COURSE DETAILS -> FONT: Romelio Sans */
 .cover.sau .sau-course-box {
   width: 86%;
   border: 1px solid #000000;
@@ -356,17 +380,18 @@ footer {
   margin: 0 auto 24px;
   text-align: center;
   background: rgba(255, 255, 255, 0.95);
-  font-family: 'Tinos', 'Times New Roman', Times, serif;
+  font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
   font-size: 15px;
   line-height: 1.4;
   color: #000000;
+  font-weight: 600;
 }
 
 .cover.sau .sau-course-box span {
   font-weight: 400;
 }
 
-/* Submission Details Grid (Assigned By / Submitted By) */
+/* 4. STUDENT AND TEACHER INFO -> FONT: Romelio Sans */
 .cover.sau .sau-submission-grid {
   width: 100%;
   display: grid;
@@ -377,7 +402,6 @@ footer {
   margin-bottom: auto;
 }
 
-/* Central Vertical Divider Line */
 .cover.sau .sau-submission-grid::before {
   content: "";
   position: absolute;
@@ -392,9 +416,9 @@ footer {
 .cover.sau .sau-column {
   display: flex;
   flex-direction: column;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
   color: #000000;
-  line-height: 1.28;
+  line-height: 1.3;
 }
 
 .cover.sau .sau-column.assigned {
@@ -407,9 +431,9 @@ footer {
 }
 
 .cover.sau .sau-column h4 {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Romelio Sans', 'RomelioSans', 'Inter', sans-serif;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 800;
   margin: 0 0 12px 0;
   color: #000000;
 }
@@ -437,7 +461,7 @@ footer {
   height: 24px;
 }
 
-/* Bottom Double-Bordered Footer Box */
+/* 5. VARSITY NAME (BOTTOM BOX) -> FONT: BatmanForeverAlternate */
 .cover.sau .sau-footer-brand {
   width: 98%;
   border: 1.5px solid #1b5c7d;
@@ -445,17 +469,17 @@ footer {
   outline-offset: 2px;
   padding: 6px 10px;
   text-align: center;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'BatmanForeverAlternate', 'Batman Forever Alternate', 'Oswald', sans-serif;
   font-size: 13.5px;
   font-weight: 800;
   color: #0d2a4a;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
   background: #ffffff;
   margin-bottom: 2px;
 }
 
-/* Central Translucent Watermark */
+/* Central Watermark */
 .cover.sau .sau-watermark {
   position: absolute;
   top: 52%;
