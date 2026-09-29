@@ -1,36 +1,27 @@
 const $ = (id) => document.getElementById(id);
 
+// Default presets matching the reference cover image & creator details
 const defaults = {
   institution: "Sylhet Agricultural University",
-  department: "Department of Agriculture",
+  department: "Department Name",
   documentType: "Assignment",
   courseName: "Extension Communication & Group Approaches",
   courseCode: "AGEXT 211",
-  title: "Effect of Salinity on Plant Growth",
-  studentName: "Md. Tahrim Kobir Riyad",
+  title: "Assignment Title",
+  studentName: "Md Tahrim Kobir Riyad",
   studentId: "1234567",
   reg: "1234",
   level: "00",
   semester: "00",
-  session: "2023–24",
-  teacherName: "Dr. Example Name",
-  teacherDesignation: "Professor, Department of Agriculture",
-  submissionDate: new Date().toISOString().slice(0,10),
-  template: "sau"
+  session: "2022-23",
+  teacherName: "Course teacher name",
+  teacherDesignation: "Designetion"
 };
 
 const fields = Object.keys(defaults);
 
 function getValue(id) {
-  return $(id).value.trim();
-}
-
-function formatDate(value) {
-  if (!value) return "Date";
-  const date = new Date(value + "T00:00:00");
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit", month: "long", year: "numeric"
-  });
+  return $(id) ?$(id).value.trim() : "";
 }
 
 function safeText(value, fallback) {
@@ -47,36 +38,29 @@ function updatePreview() {
   const semester = getValue("semester");
   const session = getValue("session");
 
-  $("previewInstitution").textContent = safeText(institution, "YOUR UNIVERSITY / INSTITUTION");
-  $("previewDepartment").textContent = safeText(department, "Department Name");
   $("previewType").textContent = getValue("documentType") || "Assignment";
   $("previewTitle").textContent = safeText(getValue("title"), "Assignment Title");
-  $("previewCourseName").textContent = safeText(getValue("courseName"), "Course Name");
-  $("previewCourseCode").textContent = safeText(getValue("courseCode"), "Course Code");
-  $("previewStudent").textContent = safeText(student, "Student Name");
+  $("previewCourseName").textContent = safeText(getValue("courseName"), "Extension Communication & Group Approaches");
+  $("previewCourseCode").textContent = safeText(getValue("courseCode"), "AGEXT 211");
+  
+  $("previewTeacher").textContent = safeText(teacher, "Course teacher name");
+  $("previewDesignation").textContent = safeText(designation, "Designetion");
+  $("previewDepartment2").textContent = safeText(department, "Department Name");
+  
+  $("previewStudent").textContent = safeText(student, "Student name");
   $("previewId").textContent = getValue("studentId") || "1234567";
   $("previewReg").textContent = getValue("reg") || "1234";
   $("previewLevel").textContent = level || "00";
   $("previewSemester").textContent = semester || "00";
-  $("previewSession").textContent = session || "2022–23";
-  $("previewTeacher").textContent = safeText(teacher, "Course teacher name");
-  $("previewDesignation").textContent = safeText(designation, "Designation");
-  $("previewDepartment2").textContent = safeText(department, "Department Name");
+  $("previewSession").textContent = session || "2022-23";
+  
   $("previewFooterInstitution").textContent = safeText(institution, "Sylhet Agricultural University");
   $("previewFooterBrand").textContent = `${safeText(institution, "SYLHET AGRICULTURAL UNIVERSITY")}, SYLHET`.toUpperCase();
-
-  $("cover").className = `cover ${getValue("template") || "sau"}`;
-  if (getValue("template") === "sau" && localStorage.getItem("assignmentCoverLogo")) {
-    $("watermarkLogo").src = localStorage.getItem("assignmentCoverLogo");
-    $("watermarkLogo").classList.remove("hidden");
-  } else {
-    $("watermarkLogo").classList.add("hidden");
-  }
 }
 
 function loadDefaults() {
   fields.forEach(id => {
-    if ($(id)) $(id).value = defaults[id];
+    if ($(id))$(id).value = defaults[id];
   });
   updatePreview();
 }
@@ -84,15 +68,15 @@ function loadDefaults() {
 function saveLocal() {
   const data = {};
   fields.forEach(id => data[id] = getValue(id));
-  localStorage.setItem("assignmentCoverData", JSON.stringify(data));
+  localStorage.setItem("sau_assignment_cover_data", JSON.stringify(data));
 }
 
 function loadLocal() {
   try {
-    const data = JSON.parse(localStorage.getItem("assignmentCoverData"));
+    const data = JSON.parse(localStorage.getItem("sau_assignment_cover_data"));
     if (!data) return false;
     fields.forEach(id => {
-      if ($(id) && data[id] !== undefined) $(id).value = data[id];
+      if ($(id) && data[id] !== undefined)$(id).value = data[id];
     });
     return true;
   } catch {
@@ -100,6 +84,7 @@ function loadLocal() {
   }
 }
 
+// Event Listeners for Live Updates
 $("coverForm").addEventListener("input", () => {
   updatePreview();
   saveLocal();
@@ -110,57 +95,57 @@ $("coverForm").addEventListener("change", () => {
   saveLocal();
 });
 
+// Logo Uploader Handler
 $("logoInput").addEventListener("change", (event) => {
   const file = event.target.files[0];
-  if (!file) return;
-  if (!file.type.startsWith("image/")) return;
+  if (!file || !file.type.startsWith("image/")) return;
 
   const reader = new FileReader();
   reader.onload = e => {
     $("previewLogo").src = e.target.result;
-    $("previewLogo").classList.remove("hidden");
     $("watermarkLogo").src = e.target.result;
-    $("watermarkLogo").classList.remove("hidden");
     $("logoLabel").textContent = file.name;
-    localStorage.setItem("assignmentCoverLogo", e.target.result);
+    localStorage.setItem("sau_custom_logo", e.target.result);
     updatePreview();
   };
   reader.readAsDataURL(file);
 });
 
 function restoreLogo() {
-  const logo = localStorage.getItem("assignmentCoverLogo");
+  const logo = localStorage.getItem("sau_custom_logo");
   if (logo) {
     $("previewLogo").src = logo;
-    $("previewLogo").classList.remove("hidden");
     $("watermarkLogo").src = logo;
-    $("watermarkLogo").classList.remove("hidden");
-    $("logoLabel").textContent = "Saved logo";
+    $("logoLabel").textContent = "Custom Logo Loaded";
   }
 }
 
+// Reset Form
 $("resetBtn").addEventListener("click", () => {
-  if (!confirm("Reset all information to the default sample?")) return;
-  localStorage.removeItem("assignmentCoverData");
-  localStorage.removeItem("assignmentCoverLogo");
+  if (!confirm("Reset all fields to default values?")) return;
+  localStorage.removeItem("sau_assignment_cover_data");
+  localStorage.removeItem("sau_custom_logo");
   $("logoInput").value = "";
-  $("previewLogo").src = "";
-  $("previewLogo").classList.add("hidden");
-  $("logoLabel").textContent = "Upload logo (PNG/JPG)";
+  $("previewLogo").src = "favicon1.png";
+  $("watermarkLogo").src = "favicon1.png";
+  $("logoLabel").textContent = "Upload High-Res Logo";
   loadDefaults();
 });
 
+// Print Function
 $("printBtn").addEventListener("click", () => {
   window.print();
 });
 
+// PDF Downloader (300 DPI High-Quality Output)
 $("downloadBtn").addEventListener("click", async () => {
   const button = $("downloadBtn");
-  const original = button.innerHTML;
+  const originalHtml = button.innerHTML;
   button.disabled = true;
-  button.innerHTML = "Preparing PDF…";
+  button.innerHTML = "Generating PDF…";
 
-  const title = (getValue("title") || "assignment-cover")
+  const rawTitle = getValue("title") || "sau-assignment-cover";
+  const formattedTitle = rawTitle
     .replace(/[^\w\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-")
@@ -168,9 +153,14 @@ $("downloadBtn").addEventListener("click", async () => {
 
   const options = {
     margin: 0,
-    filename: `${title || "assignment-cover"}.pdf`,
+    filename: `${formattedTitle}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2.5, useCORS: true, backgroundColor: "#ffffff" },
+    html2canvas: { 
+      scale: 3, 
+      useCORS: true, 
+      backgroundColor: "#ffffff",
+      logging: false
+    },
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
     pagebreak: { mode: ["avoid-all"] }
   };
@@ -178,14 +168,16 @@ $("downloadBtn").addEventListener("click", async () => {
   try {
     await html2pdf().set(options).from($("cover")).save();
   } catch (error) {
-    console.error(error);
-    alert("PDF generation failed. Please try the Print button and choose “Save as PDF”.");
+    console.error("PDF generation failed:", error);
+    alert("Direct PDF export failed. Using window print fallback.");
+    window.print();
   } finally {
     button.disabled = false;
-    button.innerHTML = original;
+    button.innerHTML = originalHtml;
   }
 });
 
+// Initialize Application State
 if (!loadLocal()) loadDefaults();
 else updatePreview();
 restoreLogo();
