@@ -176,9 +176,15 @@
                 <span id="previewType">Assignment</span>
               </div>
 
-              <!-- Ornament Vector Flourish -->
-              <div class="sau-ornament">
-                <svg width="84" height="26" viewBox="0 0 120 38" fill="none">
+              <!-- Ornament Vector Flourish (Mirrored) -->
+              <div class="sau-ornaments">
+                <svg width="60" height="26" viewBox="0 0 120 38" fill="none" style="transform: scaleX(-1);">
+                  <path d="M10 22 C 30 6, 42 32, 60 18 C 78 32, 90 6, 110 22" stroke="#719db2" stroke-width="2.5" stroke-linecap="round"/>
+                  <path d="M30 18 C 38 12, 44 22, 52 17" stroke="#719db2" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M68 17 C 76 22, 82 12, 90 18" stroke="#719db2" stroke-width="1.8" stroke-linecap="round"/>
+                  <circle cx="60" cy="18" r="3" fill="#719db2"/>
+                </svg>
+                <svg width="60" height="26" viewBox="0 0 120 38" fill="none">
                   <path d="M10 22 C 30 6, 42 32, 60 18 C 78 32, 90 6, 110 22" stroke="#719db2" stroke-width="2.5" stroke-linecap="round"/>
                   <path d="M30 18 C 38 12, 44 22, 52 17" stroke="#719db2" stroke-width="1.8" stroke-linecap="round"/>
                   <path d="M68 17 C 76 22, 82 12, 90 18" stroke="#719db2" stroke-width="1.8" stroke-linecap="round"/>
@@ -197,26 +203,31 @@
                 <div>Course Code: <span id="previewCourseCode">AGEXT 211</span></div>
               </div>
 
-              <!-- Submission Grid Section (Romelio Sans) -->
-              <div class="sau-submission-grid">
-                <div class="sau-column assigned">
-                  <h4>Assigned By</h4>
-                  <div id="previewTeacher" class="bold-text">Course teacher name</div>
-                  <div id="previewDesignation" class="bold-text">Designation</div>
-                  <div id="previewDepartment2" class="bold-text">Department Name</div>
-                  <div class="sau-spacer"></div>
-                  <div id="previewFooterInstitution" class="bold-text">Sylhet Agricultural University</div>
-                  <div class="bold-text">Sylhet-3100</div>
+              <!-- Structured Submission Grid -->
+              <div class="sau-submission-wrapper">
+                <div class="grid-header">
+                  <div class="col-left">Assigned By</div>
+                  <div class="col-right">Submitted By</div>
                 </div>
+                
+                <div class="grid-body">
+                  <div class="col-left">
+                    <div id="previewTeacher" class="bold-text">Course teacher name</div>
+                    <div id="previewDesignation" class="bold-text">Designation</div>
+                    <div id="previewDepartment2" class="bold-text">Department Name</div>
+                    <div class="sau-spacer"></div>
+                    <div id="previewFooterInstitution" class="bold-text">Sylhet Agricultural University</div>
+                    <div class="bold-text">Sylhet-3100</div>
+                  </div>
 
-                <div class="sau-column submitted">
-                  <h4>Submitted By</h4>
-                  <div id="previewStudent" class="bold-text">Md Tahrim Kobir Riyad</div>
-                  <div class="row-text"><span class="lbl">ID:</span> <span id="previewId">1234567</span></div>
-                  <div class="row-text"><span class="lbl">Reg:</span> <span id="previewReg">1234</span></div>
-                  <div class="row-text"><span class="lbl">Level:</span> <span id="previewLevel">00</span></div>
-                  <div class="row-text"><span class="lbl">Semester:</span> <span id="previewSemester">00</span></div>
-                  <div class="row-text"><span class="lbl">Session:</span> <span id="previewSession">2022-23</span></div>
+                  <div class="col-right">
+                    <div id="previewStudent" class="bold-text">Student name</div>
+                    <div class="row-text"><span class="lbl">ID:</span> <span id="previewId">1234567</span></div>
+                    <div class="row-text"><span class="lbl">Reg:</span> <span id="previewReg">1234</span></div>
+                    <div class="row-text"><span class="lbl">Level:</span> <span id="previewLevel">00</span></div>
+                    <div class="row-text"><span class="lbl">Semester:</span> <span id="previewSemester">00</span></div>
+                    <div class="row-text"><span class="lbl">Session:</span> <span id="previewSession">2022-23</span></div>
+                  </div>
                 </div>
               </div>
 
