@@ -1,23 +1,11 @@
 /**
  * ==========================================
  * TRACAD ASSIGNMENT COVER STUDIO
- * PDF Generation with Native Print Engine
+ * PDF via native browser print engine (vector, single A4 page)
  * ==========================================
- * 
- * Features:
- * - No html2pdf.js (uses native browser print)
- * - Single event listeners (no duplicates)
- * - A4 210×297mm single-page output
- * - Sharp vector PDF (not screenshot)
- * - LocalStorage persistence
- * - Custom logo support
  */
 
-/**
- * ==========================================
- * 1. UTILITY FUNCTIONS
- * ==========================================
- */
+/* 1. UTILITIES */
 const $ = (id) => document.getElementById(id);
 
 function getValue(id) {
@@ -28,11 +16,7 @@ function safeText(value, fallback) {
   return value || fallback;
 }
 
-/**
- * ==========================================
- * 2. CONFIGURATION & DEFAULTS
- * ==========================================
- */
+/* 2. CONFIGURATION & DEFAULTS */
 const defaults = {
   institution: "Sylhet Agricultural University",
   department: "Department Name",
@@ -53,15 +37,7 @@ const defaults = {
 
 const fields = Object.keys(defaults);
 
-/**
- * ==========================================
- * 3. CORE LOGIC - Update, Load, Save
- * ==========================================
- */
-
-/**
- * Update preview elements with current form values
- */
+/* 3. CORE LOGIC - Update, Load, Save */
 function updatePreview() {
   const institution = getValue("institution");
   const department = getValue("department");
@@ -78,13 +54,13 @@ function updatePreview() {
   $("previewTitle").textContent = safeText(getValue("title"), "Assignment Title");
   $("previewCourseName").textContent = safeText(getValue("courseName"), "Extension Communication & Group Approaches");
   $("previewCourseCode").textContent = safeText(getValue("courseCode"), "AGEXT 211");
-  
+
   // Teacher Info
   $("previewTeacher").textContent = safeText(teacher, "Course teacher name");
   $("previewDesignation").textContent = safeText(designation, "Designation");
   $("previewDepartment2").textContent = safeText(department, "Department Name");
   $("previewTeacherUniversity").textContent = safeText(teacherUniv, "Sylhet Agricultural University, Sylhet-3100");
-  
+
   // Student Info
   $("previewStudent").textContent = safeText(student, "Student name");
   $("previewId").textContent = getValue("studentId") || "1234567";
@@ -92,38 +68,34 @@ function updatePreview() {
   $("previewLevel").textContent = level || "00";
   $("previewSemester").textContent = semester || "00";
   $("previewSession").textContent = session || "2022-23";
-  
-  // Institutional Info (Footer brand)
-  $("docFooterBrand").textContent = `${safeText(institution, "SYLHET AGRICULTURAL UNIVERSITY")}, SYLHET`.toUpperCase();
+
+  // Footer brand
+  $("docFooterBrand").textContent =
+    `${safeText(institution, "SYLHET AGRICULTURAL UNIVERSITY")}, SYLHET`.toUpperCase();
 }
 
-/**
- * Load default values into form
- */
 function loadDefaults() {
-  fields.forEach(id => {
+  fields.forEach((id) => {
     if ($(id)) $(id).value = defaults[id];
   });
   updatePreview();
 }
 
-/**
- * Save form values to localStorage
- */
 function saveLocal() {
-  const data = {};
-  fields.forEach(id => data[id] = getValue(id));
-  localStorage.setItem("sau_assignment_cover_data", JSON.stringify(data));
+  try {
+    const data = {};
+    fields.forEach((id) => (data[id] = getValue(id)));
+    localStorage.setItem("sau_assignment_cover_data", JSON.stringify(data));
+  } catch (e) {
+    /* storage unavailable - ignore */
+  }
 }
 
-/**
- * Load form values from localStorage
- */
 function loadLocal() {
   try {
     const data = JSON.parse(localStorage.getItem("sau_assignment_cover_data"));
     if (!data) return false;
-    fields.forEach(id => {
+    fields.forEach((id) => {
       if ($(id) && data[id] !== undefined) $(id).value = data[id];
     });
     return true;
@@ -132,42 +104,93 @@ function loadLocal() {
   }
 }
 
-/**
- * Restore custom logo from localStorage
- */
 function restoreLogo() {
-  const logo = localStorage.getItem("sau_custom_logo");
-  if (logo) {
-    $("previewLogo").src = logo;
-    $("watermarkLogo").src = logo;
-    $("logoLabel").textContent = "Custom Logo Loaded";
+  try {
+    const logo = localStorage.getItem("sau_custom_logo");
+    if (logo) {
+      $("previewLogo").src = logo;
+      $("watermarkLogo").src = logo;
+      $("logoLabel").textContent = "Custom Logo Loaded";
+    }
+  } catch (e) {
+    /* ignore */
   }
 }
 
-/**
- * ==========================================
- * 4. EVENT LISTENERS (SINGLE INSTANCES)
- * ==========================================
- */
+/* 4. PDF / PRINT PIPELINE (single entry point) */
+const originalTitle = document.title;
+let isExporting = false;
 
-/**
- * Form input changes - update preview and save
- */
+// File name suggested by "Save as PDF" comes from document.title
+function buildPdfName() {
+  const raw = [getValue("documentType") || "Assignment", getValue("courseCode"), getValue("studentId")]
+    .filter(Boolean)
+    .join("_");
+  return raw.replace(/[^\w\-]+/g, "_") || "Assignment_Cover";
+}
+
+// Make sure fonts + logo images are ready so the PDF matches the preview
+function waitForAssets() {
+  const tasks = [];
+  if (document.fonts && document.fonts.ready) tasks.push(document.fonts.ready);
+  document.querySelectorAll("#cover img").forEach((img) => {
+    if (!img.complete) {
+      tasks.push(
+        new Promise((resolve) => {
+          img.addEventListener("load", resolve, { once: true });
+          img.addEventListener("error", resolve, { once: true });
+        })
+      );
+    }
+  });
+  const timeout = new Promise((resolve) => setTimeout(resolve, 3000));
+  return Promise.race([Promise.all(tasks), timeout]);
+}
+
+async function exportPdf() {
+  if (isExporting) return;
+  isExporting = true;
+
+  const downloadBtn = $("downloadBtn");
+  const printBtn = $("printBtn");
+  const originalHtml = downloadBtn ? downloadBtn.innerHTML : "";
+
+  if (downloadBtn) {
+    downloadBtn.disabled = true;
+    downloadBtn.innerHTML = "Opening Print Dialog…";
+  }
+  if (printBtn) printBtn.disabled = true;
+
+  try {
+    updatePreview();
+    await waitForAssets();
+    document.title = buildPdfName();
+    window.print(); // user picks "Save as PDF" -> sharp vector PDF
+  } catch (error) {
+    console.error("Print dialog error:", error);
+    alert("Could not open print dialog. Please try again.");
+  } finally {
+    document.title = originalTitle;
+    if (downloadBtn) {
+      downloadBtn.disabled = false;
+      downloadBtn.innerHTML = originalHtml;
+    }
+    if (printBtn) printBtn.disabled = false;
+    isExporting = false;
+  }
+}
+
+/* 5. EVENT LISTENERS (each registered exactly once) */
+
+// One listener for the whole form ("input" also fires for <select> and <textarea>)
 if ($("coverForm")) {
   $("coverForm").addEventListener("input", () => {
     updatePreview();
     saveLocal();
   });
-
-  $("coverForm").addEventListener("change", () => {
-    updatePreview();
-    saveLocal();
-  });
 }
 
-/**
- * Logo upload handler
- */
+// Logo upload
 if ($("logoInput")) {
   $("logoInput").addEventListener("change", (event) => {
     const file = event.target.files[0];
@@ -177,94 +200,58 @@ if ($("logoInput")) {
     }
 
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = (e) => {
       $("previewLogo").src = e.target.result;
       $("watermarkLogo").src = e.target.result;
       $("logoLabel").textContent = file.name;
-      localStorage.setItem("sau_custom_logo", e.target.result);
+      try {
+        localStorage.setItem("sau_custom_logo", e.target.result);
+      } catch (err) {
+        /* image too large to persist - still works for this session */
+      }
       updatePreview();
     };
     reader.readAsDataURL(file);
   });
 }
 
-/**
- * Reset button - clear all data
- */
+// Reset
 if ($("resetBtn")) {
   $("resetBtn").addEventListener("click", () => {
     if (!confirm("Reset all fields to default values?")) return;
-    
-    localStorage.removeItem("sau_assignment_cover_data");
-    localStorage.removeItem("sau_custom_logo");
-    
+
+    try {
+      localStorage.removeItem("sau_assignment_cover_data");
+      localStorage.removeItem("sau_custom_logo");
+    } catch (e) {
+      /* ignore */
+    }
+
     if ($("logoInput")) $("logoInput").value = "";
     $("previewLogo").src = "favicon1.png";
     $("watermarkLogo").src = "favicon1.png";
     $("logoLabel").textContent = "Upload High-Res Logo";
-    
+
     loadDefaults();
   });
 }
 
-/**
- * Print button - open native print dialog
- */
-if ($("printBtn")) {
-  $("printBtn").addEventListener("click", () => {
-    window.print();
-  });
-}
+// Download PDF + Print share the same handler
+if ($("downloadBtn")) $("downloadBtn").addEventListener("click", exportPdf);
+if ($("printBtn")) $("printBtn").addEventListener("click", exportPdf);
 
-/**
- * Download button - open print dialog for PDF save
- * Uses native browser print engine (no html2pdf.js)
- * User selects "Save as PDF" from print dialog
- */
-if ($("downloadBtn")) {
-  $("downloadBtn").addEventListener("click", async () => {
-    const button = $("downloadBtn");
-    const originalHtml = button.innerHTML;
-    
-    button.disabled = true;
-    button.innerHTML = "Opening Print Dialog…";
+// Safety: restore page title after the dialog closes
+window.addEventListener("afterprint", () => {
+  document.title = originalTitle;
+});
 
-    try {
-      // Optional: Log PDF generation (if you have an API endpoint)
-      // await logPdfGeneration();
-      
-      // Trigger the browser's native print dialog
-      // User will select "Save as PDF" to export as vector PDF
-      window.print();
-    } catch (error) {
-      console.error("Print dialog error:", error);
-      alert("Could not open print dialog. Please use the Print button instead.");
-    } finally {
-      // Restore button state after print dialog closes
-      button.disabled = false;
-      button.innerHTML = originalHtml;
-    }
-  });
-}
-
-/**
- * ==========================================
- * 5. INITIALIZATION (SINGLE INSTANCE)
- * ==========================================
- * 
- * This runs once when DOM is ready.
- * No duplicate initialization.
- */
+/* 6. INITIALIZATION */
 window.addEventListener("DOMContentLoaded", () => {
-  // Load saved data or defaults
   if (!loadLocal()) {
     loadDefaults();
   } else {
     updatePreview();
   }
-  
-  // Restore custom logo if saved
   restoreLogo();
-  
   console.log("✓ TRAcad Assignment Cover Studio initialized");
 });
