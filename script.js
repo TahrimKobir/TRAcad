@@ -71,8 +71,8 @@ const $ = (id) => document.getElementById(id);
 $("previewStudent")?.textContent = safeText(student, "Student name");
 $("previewId")?.textContent = getValue("studentId") || "1234567";
 $("previewReg")?.textContent = getValue("reg") || "1234";
-$("previewLevel")?.textContent = level ?? "00";
-$("previewSemester")?.textContent = semester ?? "00";
+$("previewLevel")?.textContent = level || "00";
+$("previewSemester")?.textContent = semester || "00";
 $("previewGroup")?.textContent = group || "A";
 $("previewSession")?.textContent = session || "2022-23";
 
