@@ -170,7 +170,6 @@ $("resetBtn").addEventListener("click", () => {
 $("printBtn").addEventListener("click", () => {
   window.print();
 });
-
 // Generate PDF Output
 $("downloadBtn").addEventListener("click", async () => {
   const button = $("downloadBtn");
@@ -178,17 +177,18 @@ $("downloadBtn").addEventListener("click", async () => {
   
   // UI Loading State
   button.disabled = true;
-  button.innerHTML = "Generating PDF…";
+  button.innerHTML = "Generating High-Res PDF…";
 
-  const fileName = "PPATH 312(P) Cover by TRAcad.pdf";
+  const fileName = "Assignment Cover by TRAcad.pdf";
   const element = $("cover"); // Targets the specific wrapper we want to print
 
   const options = {
     margin: 0,
     filename: fileName,
-    image: { type: "jpeg", quality: 0.98 },
+    // FIX 1: Change image type to 'png' for lossless, maximum text/logo quality
+    image: { type: "png" }, 
     html2canvas: { 
-      scale: 2,           // 2x scale for sharp text output
+      scale: 4,           // FIX 2: Increased scale from 2 to 4 for ultra-high resolution
       useCORS: true,      // Ensures logo/external images load properly
       scrollX: 0,
       scrollY: 0
@@ -197,12 +197,18 @@ $("downloadBtn").addEventListener("click", async () => {
       unit: "mm", 
       format: "a4", 
       orientation: "portrait" 
-    },
-    pagebreak: { mode: "avoid-all" } // Forces content to remain on a single page
+    }
   };
 
   try {
-    await html2pdf().set(options).from(element).save();
+    // FIX 3: Intercept the PDF before saving and forcefully delete any extra blank pages
+    await html2pdf().set(options).from(element).toPdf().get('pdf').then((pdf) => {
+      const totalPages = pdf.internal.getNumberOfPages();
+      // Loop backwards and delete all pages except the first one
+      for (let i = totalPages; i > 1; i--) {
+        pdf.deletePage(i); 
+      }
+    }).save();
   } catch (error) {
     console.error("PDF generation failed:", error);
     alert("Direct PDF export failed. Using window print fallback.");
