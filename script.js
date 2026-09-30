@@ -5,6 +5,9 @@
  * ==========================================
  */
 
+/* VERSION MARKER - open browser console (F12) and look for this line to confirm the new file is loaded */
+console.log("TRAcad script.js v3 loaded");
+
 /* 1. UTILITIES */
 const $ = (id) => document.getElementById(id);
 
@@ -78,14 +81,17 @@ function updatePreview() {
   setText("previewGroup", safeText(getValue("group"), "A"));
   setText("previewSession", safeText(getValue("session"), "2022-23"));
 
-  // Footer brand (don't add ", SYLHET" twice)
-  const uni = safeText(institution, "University Name").toUpperCase();
-  setText("docFooterBrand", /,\s*SYLHET$/.test(uni) || !institution ? uni : `${uni}, SYLHET`);
+  // Footer brand: exactly what is typed in University Name (upper case), nothing added automatically
+  setText("docFooterBrand", safeText(institution, "University Name").toUpperCase());
 }
 
 function loadDefaults() {
   fields.forEach((id) => {
-    if ($(id)) $(id).value = defaults[id];
+    const el = $(id);
+    if (!el) return;
+    el.value = defaults[id];
+    // <select> with no matching option would become empty -> pick the first option (e.g. "Select designation")
+    if (el.tagName === "SELECT" && el.selectedIndex === -1) el.selectedIndex = 0;
   });
   updatePreview();
 }
@@ -272,7 +278,19 @@ async function downloadPdf() {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
     pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 210, 297, undefined, "FAST");
-    pdf.save(buildPdfName() + ".pdf");
+
+    // Save with our own file name: "<Course code> Assign Cover By TRAcad.pdf"
+    const pdfName = buildPdfName();
+    pdf.setProperties({ title: pdfName }); // used as the name if a browser opens the PDF in a viewer
+    const blobUrl = URL.createObjectURL(pdf.output("blob"));
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = pdfName + ".pdf";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+
     recordDownload(); // count only successful PDFs
   } catch (error) {
     console.error("PDF download error:", error);
@@ -299,10 +317,12 @@ async function printCover() {
 
 // One listener for the whole form ("input" also fires for <select> and <textarea>)
 if ($("coverForm")) {
-  $("coverForm").addEventListener("input", () => {
+  const onFormChange = () => {
     updatePreview();
     saveLocal();
-  });
+  };
+  $("coverForm").addEventListener("input", onFormChange);
+  $("coverForm").addEventListener("change", onFormChange); // dropdowns (select) fire "change"
 }
 
 // Logo upload
