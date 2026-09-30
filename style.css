@@ -340,8 +340,8 @@ footer {
 }
 
 .cover.sau .preview-logo {
-  width: 220px; /* ADJUSTED: Increased from 190px */
-  height: 220px; /* ADJUSTED: Increased from 190px */
+  width: 300px; /* ADJUSTED: Increased from 190px */
+  height: 3000px; /* ADJUSTED: Increased from 190px */
   object-fit: contain;
   display: block;
   margin: 0 auto;
@@ -491,7 +491,7 @@ footer {
   padding: 12px;
   text-align: center;
   font-family: 'BatmanForeverAlternate', 'Impact', sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   letter-spacing: 1.5px;
   margin-top: 0;
 }
