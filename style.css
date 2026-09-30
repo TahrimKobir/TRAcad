@@ -523,39 +523,54 @@ footer {
 /* [TAG: PRINT STYLES] - True Vector PDF Quality Setup       */
 /* ========================================================= */
 @media print {
-  /* Hide all buttons, toolbars, and app shell layout */
+  /* 1. Hide everything normally */
   body * {
     visibility: hidden;
   }
-  
-  /* Make only the cover and its children visible */
+
+  /* 2. Reset the page and body completely */
+  html, body {
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 3. Strip all layout constraints & spacing from parent wrappers */
+  .app-shell, 
+  .workspace, 
+  .panel,
+  .preview-panel, 
+  .preview-stage {
+    display: block !important;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    overflow: visible !important;
+    border: none !important;
+  }
+
+  /* 4. Position the cover exactly at the top left of the physical paper */
   #cover, #cover * {
     visibility: visible;
   }
   
-  /* Force exact A4 dimensions and remove extra body scrolling */
-  html, body {
-    width: 210mm;
-    height: 297mm;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-  
-  /* Position the cover perfectly at the top left of the A4 page */
   #cover {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 210mm;
-    height: 297mm;
-    margin: 0;
-    box-shadow: none; 
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
     page-break-after: avoid !important;
     page-break-inside: avoid !important;
   }
 
-  /* Force background colors and images (like the crest) to print */
+  /* Ensure background colors/graphics print */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -563,6 +578,6 @@ footer {
 
   @page {
     size: A4 portrait;
-    margin: 0; /* Removes browser default headers/footers */
+    margin: 0;
   }
 }
