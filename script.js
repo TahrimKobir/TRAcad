@@ -118,27 +118,49 @@ function restoreLogo() {
 }
 
 /* 4. DOWNLOAD COUNTER (Python backend) */
-// Backend deploy করার পর নিজের URL এখানে দিন, শেষে "/" ছাড়া
-// যেমন: "https://yourname.pythonanywhere.com"
 const COUNTER_API = "https://tahrim.pythonanywhere.com";
+const COUNT_CACHE_KEY = "tracad_last_count";
 
 function counterEnabled() {
   return !COUNTER_API.includes("YOUR-BACKEND-URL");
 }
 
+// class="js-download-count" এবং পুরনো id="downloadCount" - দুটোতেই কাজ করে
+function paintCount(total) {
+  const text = Number(total).toLocaleString();
+  document.querySelectorAll(".js-download-count, #downloadCount").forEach((el) => {
+    el.textContent = text;
+  });
+}
+
 function showCount(total) {
-  const el = $("downloadCount");
-  if (el && Number.isFinite(total)) el.textContent = Number(total).toLocaleString();
+  if (!Number.isFinite(total)) return;
+  paintCount(total);
+  try { localStorage.setItem(COUNT_CACHE_KEY, String(total)); } catch (e) {}
+}
+
+// শেষ জানা সংখ্যা সাথে সাথে দেখায়, server-এর উত্তরের অপেক্ষা করে না
+function showCachedCount() {
+  try {
+    const raw = localStorage.getItem(COUNT_CACHE_KEY);
+    if (raw !== null && Number.isFinite(Number(raw))) paintCount(Number(raw));
+  } catch (e) {}
 }
 
 async function loadDownloadCount() {
   if (!counterEnabled()) return;
-  try {
-    const res = await fetch(`${COUNTER_API}/api/downloads`);
-    const data = await res.json();
-    showCount(data.total);
-  } catch (e) {
-    /* backend না পেলে "—" থাকবে, বাকি কাজ থামবে না */
+  showCachedCount();
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(`${COUNTER_API}/api/downloads`, { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      showCount(data.total);
+      return;
+    } catch (e) {
+      console.warn("Counter load failed:", e);
+      await new Promise((r) => setTimeout(r, 1500));
+    }
   }
 }
 
@@ -149,7 +171,7 @@ async function recordDownload() {
     const data = await res.json();
     showCount(data.total);
   } catch (e) {
-    /* ignore */
+    console.warn("Counter update failed:", e);
   }
 }
 
