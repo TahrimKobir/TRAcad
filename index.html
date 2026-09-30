@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- ========================================== -->
-  <!-- META & STYLES SECTION                      -->
-  <!-- ========================================== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Futuristic Free academic assignment cover generator">
+  <meta name="description" content="Free academic assignment cover generator - A4 single-page PDF export">
   <title>TRAcad Assignment Cover Studio | By Md Tahrim Kobir Riyad</title>
   
-  <!-- Fonts -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Stylesheet -->
+  <!-- External Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- ========================================== -->
-  <!-- HEADER SECTION                             -->
+  <!-- HEADER / TOPBAR                            -->
   <!-- ========================================== -->
   <header id="topNavbar" class="topbar">
     <div id="brandLogo" class="brand">
@@ -34,13 +31,11 @@
   </header>
 
   <!-- ========================================== -->
-  <!-- MAIN APP CONTAINER                         -->
+  <!-- MAIN APPLICATION                           -->
   <!-- ========================================== -->
   <main id="mainAppShell" class="app-shell">
     
-    <!-- ========================================== -->
-    <!-- HERO SECTION                               -->
-    <!-- ========================================== -->
+    <!-- HERO SECTION -->
     <section id="heroSection" class="hero">
       <div class="hero-content">
         <h1>Generate Print-Ready Assignment Cover Pages</h1>
@@ -48,10 +43,11 @@
       </div>
     </section>
 
+    <!-- WORKSPACE CONTAINER -->
     <div id="workspaceContainer" class="workspace">
       
       <!-- ========================================== -->
-      <!-- FORM INPUT PANEL (LEFT)                    -->
+      <!-- LEFT PANEL: FORM INPUT                     -->
       <!-- ========================================== -->
       <aside id="formPanel" class="panel form-panel">
         <div id="formHeading" class="panel-heading">
@@ -64,7 +60,7 @@
 
         <form id="coverForm">
           
-          <!-- Section 1: Course & Title -->
+          <!-- Course & Title Section -->
           <div id="secCourseInfo" class="form-section">
             <div class="section-label">Course & Title</div>
             <div class="field-group">
@@ -93,7 +89,7 @@
             </div>
           </div>
 
-          <!-- Section 2: Assigned By (Teacher) -->
+          <!-- Teacher Info Section -->
           <div id="secTeacherInfo" class="form-section">
             <div class="section-label">Assigned By (Teacher)</div>
             <div class="field-group">
@@ -110,14 +106,13 @@
                 <input id="department" type="text" placeholder="e.g. Department Name">
               </div>
             </div>
-            <!-- Dynamic Teacher University -->
             <div class="field-group">
               <label for="teacherUniversity">University</label>
               <input id="teacherUniversity" type="text" placeholder="e.g. Sylhet Agricultural University, Sylhet-3100" value="Sylhet Agricultural University, Sylhet-3100">
             </div>
           </div>
 
-          <!-- Section 3: Submitted By (Student) -->
+          <!-- Student Info Section -->
           <div id="secStudentInfo" class="form-section">
             <div class="section-label">Submitted By (Student)</div>
             <div class="field-group">
@@ -150,7 +145,7 @@
             </div>
           </div>
 
-          <!-- Section 4: Institutional Settings -->
+          <!-- Institution Info Section -->
           <div id="secInstitutionInfo" class="form-section">
             <div class="section-label">Institutional Settings</div>
             <div class="field-group">
@@ -160,16 +155,16 @@
             <div class="field-group">
               <label>Custom University Logo <span class="optional">(Optional)</span></label>
               <label class="upload-box" for="logoInput">
-                <span class="upload-icon"></span>
+                <span class="upload-icon">📁</span>
                 <span id="logoLabel">Upload High-Res Logo</span>
                 <input id="logoInput" type="file" accept="image/png,image/jpeg,image/webp">
               </label>
             </div>
           </div>
 
-          <!-- Section 5: Form Actions -->
+          <!-- Form Actions -->
           <div id="formActions" class="actions">
-            <button id="downloadBtn" class="primary-btn" type="button">Download PDF <span></span></button>
+            <button id="downloadBtn" class="primary-btn" type="button">Download PDF ↓</button>
             <button id="printBtn" class="secondary-btn" type="button">Print Document</button>
           </div>
 
@@ -177,7 +172,7 @@
       </aside>
 
       <!-- ========================================== -->
-      <!-- LIVE PREVIEW PANEL (RIGHT)                 -->
+      <!-- RIGHT PANEL: LIVE PREVIEW                  -->
       <!-- ========================================== -->
       <section id="previewPanel" class="panel preview-panel">
         <div id="previewHeading" class="panel-heading">
@@ -189,10 +184,10 @@
         </div>
 
         <div id="previewStage" class="preview-stage">
-          <!-- A4 Canvas Document -->
+          <!-- A4 COVER DOCUMENT -->
           <div id="cover" class="cover sau">
             
-            <!-- Document Frame -->
+            <!-- Frame Border -->
             <div id="docFrame" class="sau-frame">
               <div class="corner-box tl"></div>
               <div class="corner-box tr"></div>
@@ -200,20 +195,20 @@
               <div class="corner-box br"></div>
             </div>
 
-            <!-- Document Content Wrapper -->
+            <!-- Inner Content -->
             <div id="docInnerContent" class="cover-inner">
               
-              <!-- Cover Header & Logo -->
+              <!-- Logo Section -->
               <div id="docHeader" class="sau-header">
                 <img id="previewLogo" class="preview-logo" src="favicon1.png" alt="Crest Logo">
               </div>
 
-              <!-- Cover Badge -->
+              <!-- Document Badge -->
               <div id="docBadge" class="sau-doc-badge">
                 <span id="previewType">Assignment</span>
               </div>
 
-              <!-- Document Ornaments -->
+              <!-- Decorative Ornaments -->
               <div id="docOrnaments" class="sau-ornaments">
                 <svg width="60" height="26" viewBox="0 0 120 38" fill="none" style="transform: scaleX(-1);">
                   <path d="M10 22 C 30 6, 42 32, 60 18 C 78 32, 90 6, 110 22" stroke="#719db2" stroke-width="2.5" stroke-linecap="round"/>
@@ -229,12 +224,12 @@
                 </svg>
               </div>
 
-              <!-- Cover Title -->
+              <!-- Title -->
               <div id="docTitleWrap" class="sau-title-wrap">
                 <h3 id="previewTitle" class="preview-title">Assignment Title</h3>
               </div>
 
-              <!-- Course Details Box -->
+              <!-- Course Info Box -->
               <div id="docCourseBox" class="sau-course-box">
                 <div>Course Name: <span id="previewCourseName">Extension Communication &amp; Group Approaches</span></div>
                 <div>Course Code: <span id="previewCourseCode">AGEXT 211</span></div>
@@ -253,7 +248,6 @@
                     <div id="previewDesignation" class="bold-text">Designation</div>
                     <div id="previewDepartment2" class="bold-text">Department Name</div>
                     <div class="sau-spacer"></div>
-                    <!-- Teacher University dynamic element -->
                     <div id="previewTeacherUniversity" class="bold-text">Sylhet Agricultural University, Sylhet-3100</div>
                   </div>
 
@@ -268,11 +262,11 @@
                 </div>
               </div>
 
-              <!-- Footer Brand Bar -->
+              <!-- Footer Brand -->
               <div id="docFooterBrand" class="sau-footer-brand">SYLHET AGRICULTURAL UNIVERSITY, SYLHET</div>
             </div>
 
-            <!-- Background Watermark -->
+            <!-- Watermark -->
             <div id="docWatermark" class="sau-watermark" aria-hidden="true">
               <img id="watermarkLogo" src="favicon1.png" alt="Watermark Crest">
             </div>
@@ -284,7 +278,7 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- FOOTER SECTION                             -->
+  <!-- FOOTER                                     -->
   <!-- ========================================== -->
   <footer id="mainFooter">
     <div class="footer-content">
@@ -292,7 +286,7 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- External JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>
