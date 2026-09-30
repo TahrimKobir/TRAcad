@@ -190,16 +190,28 @@
         </div>
 
         <div id="previewStage" class="preview-stage">
-          <!-- A4 COVER DOCUMENT -->
-          <div id="cover" class="cover sau">
-            
-            <!-- Frame Border -->
-            <div id="docFrame" class="sau-frame">
-              <div class="corner-box tl"></div>
-              <div class="corner-box tr"></div>
-              <div class="corner-box bl"></div>
-              <div class="corner-box br"></div>
-            </div>
+
+
+        <div id="cover" class="a4-sheet">
+  <!-- ADD THIS BORDER WRAPPER -->
+  <div class="classic-border">
+    <!-- Corner Elements -->
+    <div class="corner-box top-left"></div>
+    <div class="corner-box top-right"></div>
+    <div class="corner-box bottom-left"></div>
+    <div class="corner-box bottom-right"></div>
+    
+    <div class="classic-border-inner">
+      
+      <!-- ALL YOUR EXISTING COVER CONTENT GOES HERE -->
+      <div class="sau-frame">
+         <!-- headers, titles, etc. -->
+      </div>
+      <!-- ======================================= -->
+
+    </div>
+  </div>
+</div>
 
             <!-- Inner Content -->
             <div id="docInnerContent" class="cover-inner">
