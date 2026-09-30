@@ -162,64 +162,69 @@ $("resetBtn").addEventListener("click", () => {
 
 /**
  * ==========================================
- * 5. EXPORT AND PRINT (Actions)
+ * 5. EXPORT AND PRINT (Actions & Analytics)
  * ==========================================
  */
+
+// Function to track PDF downloads in your Python API
+async function logPdfGeneration() {
+  try {
+    const res = await fetch("https://your-vercel-app.vercel.app/api/counter", {
+      method: "POST"
+    });
+    const data = await res.json();
+    console.log("Total PDFs generated globally:", data.total_generated);
+  } catch (err) {
+    console.warn("Could not log PDF analytics:", err);
+  }
+}
 
 // Native Browser Print
 $("printBtn").addEventListener("click", () => {
   window.print();
 });
 
-// Generate PDF Output
+// Generate True Vector PDF Output (Uses native print engine for MS Word quality)
 $("downloadBtn").addEventListener("click", async () => {
   const button = $("downloadBtn");
   const originalHtml = button.innerHTML;
   
   // UI Loading State
   button.disabled = true;
-  button.innerHTML = "Generating High-Res PDF…";
-
-  const fileName = "Assignment Cover by TRAcad.pdf";
-  const element = $("cover"); // Targets the specific wrapper we want to print
-
-  const options = {
-    margin: 0,
-    filename: fileName,
-    // FIX 1: Change image type to 'png' for lossless, maximum text/logo quality
-    image: { type: "png" }, 
-    html2canvas: { 
-      scale: 4,           // FIX 2: Increased scale from 2 to 4 for ultra-high resolution
-      useCORS: true,      // Ensures logo/external images load properly
-      scrollX: 0,
-      scrollY: 0
-    },
-    jsPDF: { 
-      unit: "mm", 
-      format: "a4", 
-      orientation: "portrait" 
-    }
-  };
+  button.innerHTML = "Opening Print Dialog…";
 
   try {
-    // FIX 3: Intercept the PDF before saving and forcefully delete any extra blank pages
-    await html2pdf().set(options).from(element).toPdf().get('pdf').then((pdf) => {
-      const totalPages = pdf.internal.getNumberOfPages();
-      // Loop backwards and delete all pages except the first one
-      for (let i = totalPages; i > 1; i--) {
-        pdf.deletePage(i); 
-      }
-    }).save();
+    // 1. Log the download to your Python backend analytics
+    await logPdfGeneration();
+    
+    // 2. Trigger the browser's native high-quality PDF engine
+    // (The user just selects "Save as PDF" in the dialog)
+    window.print();
   } catch (error) {
     console.error("PDF generation failed:", error);
-    alert("Direct PDF export failed. Using window print fallback.");
-    window.print();
+    alert("Something went wrong. Please use the Print button instead.");
   } finally {
     // Revert UI Loading State
     button.disabled = false;
     button.innerHTML = originalHtml;
   }
 });
+
+/**
+ * ==========================================
+ * 6. INITIALIZATION
+ * ==========================================
+ */
+window.addEventListener("DOMContentLoaded", () => {
+  if (!loadLocal()) {
+    loadDefaults();
+  } else {
+    updatePreview();
+  }
+  restoreLogo();
+});
+
+
 
 /**
  * ==========================================
