@@ -1,7 +1,7 @@
 /**
  * ==========================================
  * TRACAD ASSIGNMENT COVER STUDIO
- * PDF via native browser print engine (vector, single A4 page)
+ * Direct A4 PDF download + download counter
  * ==========================================
  */
 
@@ -117,11 +117,43 @@ function restoreLogo() {
   }
 }
 
+/* 4. DOWNLOAD COUNTER (Python backend) */
+// Backend deploy করার পর নিজের URL এখানে দিন, শেষে "/" ছাড়া
+// যেমন: "https://yourname.pythonanywhere.com"
+const COUNTER_API = "https://YOUR-BACKEND-URL";
 
+function counterEnabled() {
+  return !COUNTER_API.includes("YOUR-BACKEND-URL");
+}
 
+function showCount(total) {
+  const el = $("downloadCount");
+  if (el && Number.isFinite(total)) el.textContent = Number(total).toLocaleString();
+}
 
+async function loadDownloadCount() {
+  if (!counterEnabled()) return;
+  try {
+    const res = await fetch(`${COUNTER_API}/api/downloads`);
+    const data = await res.json();
+    showCount(data.total);
+  } catch (e) {
+    /* backend না পেলে "—" থাকবে, বাকি কাজ থামবে না */
+  }
+}
 
-/* 4. PDF PIPELINE */
+async function recordDownload() {
+  if (!counterEnabled()) return;
+  try {
+    const res = await fetch(`${COUNTER_API}/api/downloads`, { method: "POST" });
+    const data = await res.json();
+    showCount(data.total);
+  } catch (e) {
+    /* ignore */
+  }
+}
+
+/* 5. PDF PIPELINE */
 const originalTitle = document.title;
 let isExporting = false;
 
@@ -210,6 +242,7 @@ async function downloadPdf() {
     const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
     pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 210, 297, undefined, "FAST");
     pdf.save(buildPdfName() + ".pdf");
+    recordDownload(); // count only successful PDFs
   } catch (error) {
     console.error("PDF download error:", error);
     alert("Direct download failed. Opening print dialog instead - choose 'Save as PDF' and paper size A4.");
@@ -222,7 +255,7 @@ async function downloadPdf() {
   }
 }
 
-// Print Document button (native print, unchanged behaviour)
+// Print Document button (native print)
 async function printCover() {
   updatePreview();
   await waitForAssets(document);
@@ -231,9 +264,7 @@ async function printCover() {
   document.title = originalTitle;
 }
 
-
-
-/* 5. EVENT LISTENERS (each registered exactly once) */
+/* 6. EVENT LISTENERS (each registered exactly once) */
 
 // One listener for the whole form ("input" also fires for <select> and <textarea>)
 if ($("coverForm")) {
@@ -289,16 +320,16 @@ if ($("resetBtn")) {
   });
 }
 
-// Download PDF + Print share the same handler
+// Download PDF and Print buttons
 if ($("downloadBtn")) $("downloadBtn").addEventListener("click", downloadPdf);
 if ($("printBtn")) $("printBtn").addEventListener("click", printCover);
 
-// Safety: restore page title after the dialog closes
+// Safety: restore page title after the print dialog closes
 window.addEventListener("afterprint", () => {
   document.title = originalTitle;
 });
 
-/* 6. INITIALIZATION */
+/* 7. INITIALIZATION */
 window.addEventListener("DOMContentLoaded", () => {
   if (!loadLocal()) {
     loadDefaults();
@@ -306,5 +337,6 @@ window.addEventListener("DOMContentLoaded", () => {
     updatePreview();
   }
   restoreLogo();
+  loadDownloadCount();
   console.log("✓ TRAcad Assignment Cover Studio initialized");
 });
