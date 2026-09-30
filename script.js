@@ -175,6 +175,9 @@ async function recordDownload() {
   }
 }
 
+
+
+
 /* 5. PDF PIPELINE */
 const originalTitle = document.title;
 let isExporting = false;
@@ -182,11 +185,12 @@ let isExporting = false;
 const A4_W_PX = 794;   // 210mm @ 96dpi
 const A4_H_PX = 1123;  // 297mm @ 96dpi
 
+// File name: "<Course code> Assign Cover By TRAcad"
 function buildPdfName() {
-  const raw = [getValue("documentType") || "Assignment", getValue("courseCode"), getValue("studentId")]
-    .filter(Boolean)
-    .join("_");
-  return raw.replace(/[^\w\-]+/g, "_") || "Assignment_Cover";
+  const code = getValue("courseCode");
+  const name = `${code ? code + " " : ""}Assign Cover By TRAcad`;
+  // remove characters that are not allowed in file names, keep normal spaces
+  return name.replace(/[\\/:*?"<>|]+/g, "").replace(/\s+/g, " ").trim();
 }
 
 // Wait for fonts + images inside `root`
@@ -285,6 +289,9 @@ async function printCover() {
   window.print();
   document.title = originalTitle;
 }
+
+
+
 
 /* 6. EVENT LISTENERS (each registered exactly once) */
 
