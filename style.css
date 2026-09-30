@@ -477,7 +477,7 @@ footer {
 /* ========================================================= */
 .cover.sau .sau-frame {
   position: absolute;
-  inset: 16px;
+  inset: 18px;
   border: 2px solid #0b1c3d;
   pointer-events: none;
   z-index: 3;
@@ -544,16 +544,19 @@ footer {
   margin: 0 auto;
 }
 
+
+
+
 /* ========================================================= */
 /* [TAG: DOCUMENT BADGE] - The "Assignment" pill box         */
 /* ========================================================= */
 .cover.sau .sau-doc-badge {
-  background: #0b1c3d;
+  background: #053d57;
   color: #ffffff;
   padding: 8px 40px;
   border-radius: 1px;
   margin: 14px 0 8px 0;
-  border-bottom: 2px solid #d91b24;
+  border-bottom: 2px solid #ffffff;
 }
 
 .cover.sau .sau-doc-badge span {
@@ -564,6 +567,10 @@ footer {
   display: block;
   line-height: 1.1;
 }
+
+
+
+
 
 /* ========================================================= */
 /* [TAG: ORNAMENTS] - Decorative elements below the badge    */
