@@ -117,11 +117,17 @@ function restoreLogo() {
   }
 }
 
-/* 4. PDF / PRINT PIPELINE (single entry point) */
+
+
+
+
+/* 4. PDF PIPELINE */
 const originalTitle = document.title;
 let isExporting = false;
 
-// File name suggested by "Save as PDF" comes from document.title
+const A4_W_PX = 794;   // 210mm @ 96dpi
+const A4_H_PX = 1123;  // 297mm @ 96dpi
+
 function buildPdfName() {
   const raw = [getValue("documentType") || "Assignment", getValue("courseCode"), getValue("studentId")]
     .filter(Boolean)
@@ -129,11 +135,11 @@ function buildPdfName() {
   return raw.replace(/[^\w\-]+/g, "_") || "Assignment_Cover";
 }
 
-// Make sure fonts + logo images are ready so the PDF matches the preview
-function waitForAssets() {
+// Wait for fonts + images inside `root`
+function waitForAssets(root) {
   const tasks = [];
   if (document.fonts && document.fonts.ready) tasks.push(document.fonts.ready);
-  document.querySelectorAll("#cover img").forEach((img) => {
+  root.querySelectorAll("img").forEach((img) => {
     if (!img.complete) {
       tasks.push(
         new Promise((resolve) => {
@@ -147,38 +153,85 @@ function waitForAssets() {
   return Promise.race([Promise.all(tasks), timeout]);
 }
 
-async function exportPdf() {
+// Off-screen, fixed-size copy of the cover (independent of screen size/scroll/zoom)
+function makeExportClone() {
+  const stage = document.createElement("div");
+  stage.style.cssText =
+    `position:absolute;left:-10000px;top:0;width:${A4_W_PX}px;height:${A4_H_PX}px;` +
+    `overflow:hidden;background:#fff;pointer-events:none;`;
+
+  const clone = $("cover").cloneNode(true);
+  clone.removeAttribute("id");
+  clone.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+  clone.style.cssText = `width:${A4_W_PX}px;height:${A4_H_PX}px;margin:0;`;
+
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
+  return { stage, clone };
+}
+
+// Direct A4 PDF download (no print dialog)
+async function downloadPdf() {
   if (isExporting) return;
   isExporting = true;
 
-  const downloadBtn = $("downloadBtn");
-  const printBtn = $("printBtn");
-  const originalHtml = downloadBtn ? downloadBtn.innerHTML : "";
+  const btn = $("downloadBtn");
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = "Generating PDF…";
 
-  if (downloadBtn) {
-    downloadBtn.disabled = true;
-    downloadBtn.innerHTML = "Opening Print Dialog…";
-  }
-  if (printBtn) printBtn.disabled = true;
-
+  let stage = null;
   try {
-    updatePreview();
-    await waitForAssets();
-    document.title = buildPdfName();
-    window.print(); // user picks "Save as PDF" -> sharp vector PDF
-  } catch (error) {
-    console.error("Print dialog error:", error);
-    alert("Could not open print dialog. Please try again.");
-  } finally {
-    document.title = originalTitle;
-    if (downloadBtn) {
-      downloadBtn.disabled = false;
-      downloadBtn.innerHTML = originalHtml;
+    if (!window.html2canvas || !window.jspdf) {
+      throw new Error("PDF libraries not loaded");
     }
-    if (printBtn) printBtn.disabled = false;
+
+    updatePreview();
+    const made = makeExportClone();
+    stage = made.stage;
+    await waitForAssets(stage);
+
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 900;
+
+    const canvas = await window.html2canvas(made.clone, {
+      scale: isMobile ? 3 : 4,     // keeps canvas within phone memory limits
+      width: A4_W_PX,
+      height: A4_H_PX,
+      windowWidth: A4_W_PX,
+      windowHeight: A4_H_PX,
+      scrollX: 0,
+      scrollY: 0,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+      logging: false
+    });
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
+    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 210, 297, undefined, "FAST");
+    pdf.save(buildPdfName() + ".pdf");
+  } catch (error) {
+    console.error("PDF download error:", error);
+    alert("Direct download failed. Opening print dialog instead - choose 'Save as PDF' and paper size A4.");
+    window.print();
+  } finally {
+    if (stage) stage.remove();
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
     isExporting = false;
   }
 }
+
+// Print Document button (native print, unchanged behaviour)
+async function printCover() {
+  updatePreview();
+  await waitForAssets(document);
+  document.title = buildPdfName();
+  window.print();
+  document.title = originalTitle;
+}
+
+
 
 /* 5. EVENT LISTENERS (each registered exactly once) */
 
@@ -237,8 +290,8 @@ if ($("resetBtn")) {
 }
 
 // Download PDF + Print share the same handler
-if ($("downloadBtn")) $("downloadBtn").addEventListener("click", exportPdf);
-if ($("printBtn")) $("printBtn").addEventListener("click", exportPdf);
+if ($("downloadBtn")) $("downloadBtn").addEventListener("click", downloadPdf);
+if ($("printBtn")) $("printBtn").addEventListener("click", printCover);
 
 // Safety: restore page title after the dialog closes
 window.addEventListener("afterprint", () => {
