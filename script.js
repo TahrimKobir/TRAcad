@@ -1,6 +1,24 @@
+/**
+ * ==========================================
+ * 1. UTILITY FUNCTIONS
+ * ==========================================
+ */
 const $ = (id) => document.getElementById(id);
 
-// Default presets matching the reference cover image & creator details
+function getValue(id) {
+  return $(id) ?$(id).value.trim() : "";
+}
+
+function safeText(value, fallback) {
+  return value || fallback;
+}
+
+
+/**
+ * ==========================================
+ * 2. CONFIGURATION & DEFAULTS
+ * ==========================================
+ */
 const defaults = {
   institution: "Sylhet Agricultural University",
   department: "Department Name",
@@ -15,19 +33,18 @@ const defaults = {
   semester: "00",
   session: "2022-23",
   teacherName: "Course teacher name",
-  teacherDesignation: "Designetion"
+  teacherDesignation: "Designetion",
+  teacherUniversity: "Sylhet Agricultural University, Sylhet-3100" // Added new field default
 };
 
 const fields = Object.keys(defaults);
 
-function getValue(id) {
-  return $(id) ?$(id).value.trim() : "";
-}
 
-function safeText(value, fallback) {
-  return value || fallback;
-}
-
+/**
+ * ==========================================
+ * 3. CORE LOGIC (Update, Load, Save)
+ * ==========================================
+ */
 function updatePreview() {
   const institution = getValue("institution");
   const department = getValue("department");
@@ -37,16 +54,21 @@ function updatePreview() {
   const level = getValue("level");
   const semester = getValue("semester");
   const session = getValue("session");
+  const teacherUniv = getValue("teacherUniversity");
 
+  // Document Info
   $("previewType").textContent = getValue("documentType") || "Assignment";
   $("previewTitle").textContent = safeText(getValue("title"), "Assignment Title");
   $("previewCourseName").textContent = safeText(getValue("courseName"), "Extension Communication & Group Approaches");
   $("previewCourseCode").textContent = safeText(getValue("courseCode"), "AGEXT 211");
   
+  // Teacher Info
   $("previewTeacher").textContent = safeText(teacher, "Course teacher name");
   $("previewDesignation").textContent = safeText(designation, "Designetion");
   $("previewDepartment2").textContent = safeText(department, "Department Name");
+  $("previewTeacherUniversity").textContent = safeText(teacherUniv, "Sylhet Agricultural University, Sylhet-3100");
   
+  // Student Info
   $("previewStudent").textContent = safeText(student, "Student name");
   $("previewId").textContent = getValue("studentId") || "1234567";
   $("previewReg").textContent = getValue("reg") || "1234";
@@ -54,8 +76,8 @@ function updatePreview() {
   $("previewSemester").textContent = semester || "00";
   $("previewSession").textContent = session || "2022-23";
   
-  $("previewFooterInstitution").textContent = safeText(institution, "Sylhet Agricultural University");
-  $("previewFooterBrand").textContent = `${safeText(institution, "SYLHET AGRICULTURAL UNIVERSITY")}, SYLHET`.toUpperCase();
+  // Institutional Info (Footer brand)
+  $("docFooterBrand").textContent = `${safeText(institution, "SYLHET AGRICULTURAL UNIVERSITY")}, SYLHET`.toUpperCase();
 }
 
 function loadDefaults() {
@@ -84,18 +106,32 @@ function loadLocal() {
   }
 }
 
-// Event Listeners for Live Updates
+function restoreLogo() {
+  const logo = localStorage.getItem("sau_custom_logo");
+  if (logo) {
+    $("previewLogo").src = logo;
+    $("watermarkLogo").src = logo;
+    $("logoLabel").textContent = "Custom Logo Loaded";
+  }
+}
+
+/**
+ * ==========================================
+ * 4. EVENT LISTENERS
+ * ==========================================
+ */
+
+// Form Changes
 $("coverForm").addEventListener("input", () => {
   updatePreview();
   saveLocal();
 });
-
 $("coverForm").addEventListener("change", () => {
   updatePreview();
   saveLocal();
 });
 
-// Logo Uploader Handler
+// Logo Upload
 $("logoInput").addEventListener("change", (event) => {
   const file = event.target.files[0];
   if (!file || !file.type.startsWith("image/")) return;
@@ -111,16 +147,7 @@ $("logoInput").addEventListener("change", (event) => {
   reader.readAsDataURL(file);
 });
 
-function restoreLogo() {
-  const logo = localStorage.getItem("sau_custom_logo");
-  if (logo) {
-    $("previewLogo").src = logo;
-    $("watermarkLogo").src = logo;
-    $("logoLabel").textContent = "Custom Logo Loaded";
-  }
-}
-
-// Reset Form
+// Reset Button
 $("resetBtn").addEventListener("click", () => {
   if (!confirm("Reset all fields to default values?")) return;
   localStorage.removeItem("sau_assignment_cover_data");
@@ -132,20 +159,29 @@ $("resetBtn").addEventListener("click", () => {
   loadDefaults();
 });
 
-// Print Function
+
+/**
+ * ==========================================
+ * 5. EXPORT AND PRINT (Actions)
+ * ==========================================
+ */
+
+// Native Browser Print
 $("printBtn").addEventListener("click", () => {
   window.print();
 });
 
-// PDF Downloader (Fixed A4 Alignment & Multi-page Prevention)
+// Generate PDF Output
 $("downloadBtn").addEventListener("click", async () => {
   const button = $("downloadBtn");
   const originalHtml = button.innerHTML;
+  
+  // UI Loading State
   button.disabled = true;
   button.innerHTML = "Generating PDF…";
 
   const fileName = "PPATH 312(P) Cover by TRAcad.pdf";
-  const element = $("cover");
+  const element = $("cover"); // Targets the specific wrapper we want to print
 
   const options = {
     margin: 0,
@@ -172,7 +208,22 @@ $("downloadBtn").addEventListener("click", async () => {
     alert("Direct PDF export failed. Using window print fallback.");
     window.print();
   } finally {
+    // Revert UI Loading State
     button.disabled = false;
     button.innerHTML = originalHtml;
   }
+});
+
+/**
+ * ==========================================
+ * 6. INITIALIZATION
+ * ==========================================
+ */
+window.addEventListener("DOMContentLoaded", () => {
+  if (!loadLocal()) {
+    loadDefaults();
+  } else {
+    updatePreview();
+  }
+  restoreLogo();
 });
