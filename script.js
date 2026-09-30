@@ -24,25 +24,33 @@ function setText(id, value) {
 
 /* 2. CONFIGURATION & DEFAULTS */
 const defaults = {
-  institution: "Sylhet Agricultural University, Sylhet",
-  department: "Department of Agronomy and Haor Agriculture",
+  // Only the badge keeps a value; everything else stays blank
   documentType: "Assignment",
-  courseName: "Seed Science (Theory)",
-  courseCode: "AGRHA 201(T)",
-  title: "Effect of Nitrogen Management on Seed Quality and Crop Performance of Rice: Implications for Seedling Vigour and Nutrient Use Efficiency",
-  studentName: "Tanvir Ahmed",
-  studentId: "1000000",
-  reg: "2000",
-  level: "02",
-  semester: "01",
-  group: "A",
-  session: "2024-25",
-  teacherName: "Dr. Prof. Nazrul Islam",
-  teacherDesignation: "Professor",
-  teacherDepartment: "Department of Agronomy and Haor Agriculture",
-  teacherUniversity: "Sylhet Agricultural University, Sylhet"
+  institution: "",
+
+  // Institution, Course & Title, Teacher and Student fields stay blank - the form only shows "e.g." placeholders
+  department: "",
+  courseName: "",
+  courseCode: "",
+  title: "",
+  studentName: "",
+  studentId: "",
+  reg: "",
+  level: "",
+  semester: "",
+  group: "",
+  session: "",
+  teacherName: "",
+  teacherDesignation: "",
+  teacherDepartment: "",
+  teacherUniversity: ""
 };
 const fields = Object.keys(defaults);
+
+// New storage key (v2) so old saved values (Tanvir Ahmed, Professor, etc.) are ignored automatically
+const FORM_KEY = "tracad_cover_form_v2";
+const OLD_FORM_KEY = "sau_assignment_cover_data";
+try { localStorage.removeItem(OLD_FORM_KEY); } catch (e) {}
 
 /* 3. CORE LOGIC - Update, Load, Save */
 function updatePreview() {
@@ -53,13 +61,13 @@ function updatePreview() {
   setText("previewType", getValue("documentType") || "Assignment");
   setText("previewTitle", safeText(getValue("title"), "Assignment Title"));
   setText("previewCourseName", safeText(getValue("courseName"), "Course Name"));
-  setText("previewCourseCode", safeText(getValue("courseCode"), "AGEXT 211"));
+  setText("previewCourseCode", safeText(getValue("courseCode"), "Course Code"));
 
   // Teacher Info
   setText("previewTeacher", safeText(getValue("teacherName"), "Course teacher name"));
   setText("previewDesignation", safeText(getValue("teacherDesignation"), "Designation"));
   setText("previewDepartment2", safeText(department, "Department Name"));
-  setText("previewTeacherUniversity", safeText(getValue("teacherUniversity"), "Sylhet Agricultural University, Sylhet"));
+  setText("previewTeacherUniversity", safeText(getValue("teacherUniversity"), "University Name"));
 
   // Student Info
   setText("previewStudent", safeText(getValue("studentName"), "Student name"));
@@ -71,8 +79,8 @@ function updatePreview() {
   setText("previewSession", safeText(getValue("session"), "2022-23"));
 
   // Footer brand (don't add ", SYLHET" twice)
-  const uni = safeText(institution, "Sylhet Agricultural University").toUpperCase();
-  setText("docFooterBrand", /,\s*SYLHET$/.test(uni) ? uni : `${uni}, SYLHET`);
+  const uni = safeText(institution, "University Name").toUpperCase();
+  setText("docFooterBrand", /,\s*SYLHET$/.test(uni) || !institution ? uni : `${uni}, SYLHET`);
 }
 
 function loadDefaults() {
@@ -86,7 +94,7 @@ function saveLocal() {
   try {
     const data = {};
     fields.forEach((id) => (data[id] = getValue(id)));
-    localStorage.setItem("sau_assignment_cover_data", JSON.stringify(data));
+    localStorage.setItem(FORM_KEY, JSON.stringify(data));
   } catch (e) {
     /* storage unavailable - ignore */
   }
@@ -94,7 +102,7 @@ function saveLocal() {
 
 function loadLocal() {
   try {
-    const data = JSON.parse(localStorage.getItem("sau_assignment_cover_data"));
+    const data = JSON.parse(localStorage.getItem(FORM_KEY));
     if (!data) return false;
     fields.forEach((id) => {
       if ($(id) && data[id] !== undefined) $(id).value = data[id];
@@ -328,7 +336,7 @@ if ($("resetBtn")) {
     if (!confirm("Reset all fields to default values?")) return;
 
     try {
-      localStorage.removeItem("sau_assignment_cover_data");
+      localStorage.removeItem(FORM_KEY);
       localStorage.removeItem("sau_custom_logo");
     } catch (e) {
       /* ignore */
