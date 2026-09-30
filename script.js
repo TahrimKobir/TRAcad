@@ -16,6 +16,12 @@ function safeText(value, fallback) {
   return value || fallback;
 }
 
+// Safe way to write text into a preview element (no optional-chaining assignment)
+function setText(id, value) {
+  const el = $(id);
+  if (el) el.textContent = value;
+}
+
 /* 2. CONFIGURATION & DEFAULTS */
 const defaults = {
   institution: "Sylhet Agricultural University, Sylhet",
@@ -24,7 +30,7 @@ const defaults = {
   courseName: "Seed Science (Theory)",
   courseCode: "AGRHA 201(T)",
   title: "Effect of Nitrogen Management on Seed Quality and Crop Performance of Rice: Implications for Seedling Vigour and Nutrient Use Efficiency",
-  studentName: "Tanvir Ahmed", 
+  studentName: "Tanvir Ahmed",
   studentId: "1000000",
   reg: "2000",
   level: "02",
@@ -33,7 +39,7 @@ const defaults = {
   session: "2024-25",
   teacherName: "Dr. Prof. Nazrul Islam",
   teacherDesignation: "Professor",
-   teacherDepartment: "Department of Agronomy and Haor Agriculture",
+  teacherDepartment: "Department of Agronomy and Haor Agriculture",
   teacherUniversity: "Sylhet Agricultural University, Sylhet"
 };
 const fields = Object.keys(defaults);
@@ -42,43 +48,31 @@ const fields = Object.keys(defaults);
 function updatePreview() {
   const institution = getValue("institution");
   const department = getValue("department");
-  const student = getValue("studentName");
-  const teacher = getValue("teacherName");
-  const designation = getValue("teacherDesignation");
-  const level = getValue("level");
-  const semester = getValue("semester");
-  const group = getValue("group");
-  const session = getValue("session");
-  const teacherUniv = getValue("teacherUniversity");
 
   // Document Info
-  $("previewType").textContent = getValue("documentType") || "Assignment";
-  $("previewTitle").textContent = safeText(getValue("title"), "Assignment Title");
-  $("previewCourseName").textContent = safeText(getValue("courseName"), "Extension Communication & Group Approaches");
-  $("previewCourseCode").textContent = safeText(getValue("courseCode"), "AGEXT 211");
+  setText("previewType", getValue("documentType") || "Assignment");
+  setText("previewTitle", safeText(getValue("title"), "Assignment Title"));
+  setText("previewCourseName", safeText(getValue("courseName"), "Course Name"));
+  setText("previewCourseCode", safeText(getValue("courseCode"), "AGEXT 211"));
 
   // Teacher Info
-  $("previewTeacher").textContent = safeText(teacher, "Course teacher name");
-  $("previewDesignation").textContent = safeText(designation, "Designation");
-  $("previewDepartment2").textContent = safeText(department, "Department Name");
-  $("previewTeacherUniversity").textContent = safeText(teacherUniv, "Sylhet Agricultural University, Sylhet-3100");
+  setText("previewTeacher", safeText(getValue("teacherName"), "Course teacher name"));
+  setText("previewDesignation", safeText(getValue("teacherDesignation"), "Designation"));
+  setText("previewDepartment2", safeText(department, "Department Name"));
+  setText("previewTeacherUniversity", safeText(getValue("teacherUniversity"), "Sylhet Agricultural University, Sylhet"));
 
   // Student Info
-// Ensure your helper targets element IDs:
-const $ = (id) => document.getElementById(id);
+  setText("previewStudent", safeText(getValue("studentName"), "Student name"));
+  setText("previewId", safeText(getValue("studentId"), "1234567"));
+  setText("previewReg", safeText(getValue("reg"), "1234"));
+  setText("previewLevel", safeText(getValue("level"), "00"));
+  setText("previewSemester", safeText(getValue("semester"), "00"));
+  setText("previewGroup", safeText(getValue("group"), "A"));
+  setText("previewSession", safeText(getValue("session"), "2022-23"));
 
-// Safe DOM population
-$("previewStudent")?.textContent = safeText(student, "Student name");
-$("previewId")?.textContent = getValue("studentId") || "1234567";
-$("previewReg")?.textContent = getValue("reg") || "1234";
-$("previewLevel")?.textContent = level || "00";
-$("previewSemester")?.textContent = semester || "00";
-$("previewGroup")?.textContent = group || "A";
-$("previewSession")?.textContent = session || "2022-23";
-
-  // Footer brand
-  $("docFooterBrand").textContent =
-    `${safeText(institution, "SYLHET AGRICULTURAL UNIVERSITY")}, SYLHET`.toUpperCase();
+  // Footer brand (don't add ", SYLHET" twice)
+  const uni = safeText(institution, "Sylhet Agricultural University").toUpperCase();
+  setText("docFooterBrand", /,\s*SYLHET$/.test(uni) ? uni : `${uni}, SYLHET`);
 }
 
 function loadDefaults() {
@@ -132,7 +126,7 @@ function counterEnabled() {
   return !COUNTER_API.includes("YOUR-BACKEND-URL");
 }
 
-// class="js-download-count" এবং পুরনো id="downloadCount" - দুটোতেই কাজ করে
+// Works with class="js-download-count" and the old id="downloadCount"
 function paintCount(total) {
   const text = Number(total).toLocaleString();
   document.querySelectorAll(".js-download-count, #downloadCount").forEach((el) => {
@@ -146,7 +140,7 @@ function showCount(total) {
   try { localStorage.setItem(COUNT_CACHE_KEY, String(total)); } catch (e) {}
 }
 
-// শেষ জানা সংখ্যা সাথে সাথে দেখায়, server-এর উত্তরের অপেক্ষা করে না
+// Show the last known number instantly, without waiting for the server
 function showCachedCount() {
   try {
     const raw = localStorage.getItem(COUNT_CACHE_KEY);
@@ -182,9 +176,6 @@ async function recordDownload() {
   }
 }
 
-
-
-
 /* 5. PDF PIPELINE */
 const originalTitle = document.title;
 let isExporting = false;
@@ -196,7 +187,6 @@ const A4_H_PX = 1123;  // 297mm @ 96dpi
 function buildPdfName() {
   const code = getValue("courseCode");
   const name = `${code ? code + " " : ""}Assign Cover By TRAcad`;
-  // remove characters that are not allowed in file names, keep normal spaces
   return name.replace(/[\\/:*?"<>|]+/g, "").replace(/\s+/g, " ").trim();
 }
 
@@ -296,9 +286,6 @@ async function printCover() {
   window.print();
   document.title = originalTitle;
 }
-
-
-
 
 /* 6. EVENT LISTENERS (each registered exactly once) */
 
