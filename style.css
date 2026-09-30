@@ -754,10 +754,81 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 40px -10px rgba(0, 242, 254, 0.4);
 }
 
-/* Footer */
+/* ========================================================= */
+/* [TAG: ENHANCED GLASSMORPHIC FOOTER]                       */
+/* ========================================================= */
 footer { 
-  background: rgba(10, 10, 15, 0.8); 
-  backdrop-filter: blur(12px); 
-  border-top: 1px solid rgba(255, 255, 255, 0.05); 
+  margin-top: 40px;
+  padding: 22px 0;
+  background: rgba(10, 10, 18, 0.75); 
+  backdrop-filter: blur(14px); 
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08); 
+  box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.4);
   color: #94a3b8; 
+  width: 100%;
+}
+
+.footer-content {
+  width: min(1440px, 94vw); 
+  margin: 0 auto;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  flex-wrap: wrap; 
+  gap: 16px;
+  font-size: 13.5px;
+}
+
+/* Text and Links styling */
+.footer-content strong { 
+  color: #f8f9fa; 
+  font-weight: 600; 
+}
+
+.footer-content a {
+  color: #00f2fe;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.footer-content a:hover {
+  color: #4facfe;
+  text-shadow: 0 0 10px rgba(0, 242, 254, 0.6);
+}
+
+/* FIX: Constrain all images, SVGs, and social icons in footer */
+.footer-content img,
+.footer-content svg {
+  width: 18px;
+  height: 18px;
+  max-width: 24px;
+  max-height: 24px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+/* Optional wrapper if social links are grouped */
+.footer-links, 
+.footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.footer-socials a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12.5px;
+}
+
+.footer-socials a:hover {
+  background: rgba(0, 242, 254, 0.1);
+  border-color: rgba(0, 242, 254, 0.3);
 }
