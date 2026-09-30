@@ -515,87 +515,71 @@ footer {
   object-fit: contain;
 }
 
+
 /* ========================================================= */
 /* [TAG: PRINT STYLES] - A4 Vector PDF Quality Setup         */
 /* ========================================================= */
 @media print {
-  /* Force exact colors to print */
+  /* Background graphics / exact colors */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* Hide header and footer */
-  header,
-  footer {
-    display: none !important;
-  }
-
-  /* Hide main layout elements except preview */
-  .topbar,
-  .hero {
-    display: none !important;
-  }
-
-  /* Hide form panel */
-  #formPanel,
-  .form-panel {
-    display: none !important;
-  }
-
-  /* Restructure workspace for printing */
-  .workspace {
-    display: block !important;
-    margin: 0 !important;
-    gap: 0 !important;
-  }
-
-  /* Preview panel full width */
-  #previewPanel,
-  .preview-panel {
-    position: static !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    width: 100% !important;
-  }
-
-  /* Preview stage shows only cover */
-  .preview-stage {
-    min-height: 0 !important;
-    height: auto !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    background: white !important;
-    border-radius: 0 !important;
-    place-items: center !important;
-  }
-
-  /* Cover dimensions for A4 print */
-  #cover {
+  html, body {
     width: 210mm !important;
     height: 297mm !important;
     margin: 0 !important;
     padding: 0 !important;
-    page-break-after: avoid !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+  }
+
+  /* Hide everything except the cover */
+  .topbar,
+  .hero,
+  .form-panel,
+  #formPanel,
+  .panel-heading,
+  #previewHeading,
+  footer,
+  #mainFooter {
+    display: none !important;
+  }
+
+  /* Every ancestor of the cover: exactly one A4 page, clipped */
+  .app-shell,
+  .workspace,
+  .preview-panel,
+  .preview-stage {
+    display: block !important;
+    position: static !important;
+    width: 210mm !important;
+    max-width: none !important;
+    height: 297mm !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    overflow: hidden !important;
+  }
+
+  #cover {
+    display: block !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    transform: none !important;
+    zoom: 1 !important;
+    break-inside: avoid !important;
+    break-after: avoid !important;
     page-break-inside: avoid !important;
-  }
-
-  /* Page setup */
-  @page {
-    size: A4 portrait;
-    margin: 0;
-  }
-
-  body {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  main {
-    margin: 0 !important;
-    padding: 0 !important;
+    page-break-after: avoid !important;
   }
 }
