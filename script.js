@@ -47,6 +47,7 @@ function updatePreview() {
   const designation = getValue("teacherDesignation");
   const level = getValue("level");
   const semester = getValue("semester");
+  const group = getValue("group");
   const session = getValue("session");
   const teacherUniv = getValue("teacherUniversity");
 
@@ -63,12 +64,17 @@ function updatePreview() {
   $("previewTeacherUniversity").textContent = safeText(teacherUniv, "Sylhet Agricultural University, Sylhet-3100");
 
   // Student Info
-  $("previewStudent").textContent = safeText(student, "Student name");
-  $("previewId").textContent = getValue("studentId") || "1234567";
-  $("previewReg").textContent = getValue("reg") || "1234";
-  $("previewLevel").textContent = level || "00";
-  $("previewSemester").textContent = semester || "00";
-  $("previewSession").textContent = session || "2022-23";
+// Ensure your helper targets element IDs:
+const $ = (id) => document.getElementById(id);
+
+// Safe DOM population
+$("previewStudent")?.textContent = safeText(student, "Student name");
+$("previewId")?.textContent = getValue("studentId") || "1234567";
+$("previewReg")?.textContent = getValue("reg") || "1234";
+$("previewLevel")?.textContent = level ?? "00";
+$("previewSemester")?.textContent = semester ?? "00";
+$("previewGroup")?.textContent = group || "A";
+$("previewSession")?.textContent = session || "2022-23";
 
   // Footer brand
   $("docFooterBrand").textContent =
