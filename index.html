@@ -9,7 +9,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
 
   <!-- External Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -19,19 +19,19 @@
   <!-- ========================================== -->
   <!-- HEADER / TOPBAR                            -->
   <!-- ========================================== -->
-<div class="topbar">
-  <a href="#" class="brand">
-    <img src="tracad.png" alt="TRAcad Logo" class="topbar-logo" />
-    <div class="brand-info">
-      <strong>TRAcad</strong>
-      <span class="brand-subtext">Academic Solutions</span>
+  <div class="topbar">
+    <a href="#" class="brand">
+      <img src="tracad.png" alt="TRAcad Logo" class="topbar-logo" />
+      <div class="brand-info">
+        <strong>TRAcad</strong>
+        <span class="brand-subtext">Academic Solutions</span>
+      </div>
+    </a>
+    <div class="topbar-right">
+      <span class="top-tag"><span class="status-dot"></span> Official Generator</span>
+      <span class="tracad-badge">Verified Brand</span>
     </div>
-  </a>
-  <div class="topbar-right">
-    <span class="top-tag"><span class="status-dot"></span> Official Generator</span>
-    <span class="tracad-badge">Verified Brand</span>
   </div>
-</div>
 
   <!-- ========================================== -->
   <!-- MAIN APPLICATION                           -->
@@ -51,12 +51,14 @@
     <!-- WORKSPACE CONTAINER -->
     <div id="workspaceContainer" class="workspace">
       
-     
-<form id="coverForm">
+      <!-- LEFT PANEL: FORM -->
+      <aside id="formPanel" class="panel form-panel">
+        <form id="coverForm">
           
           <!-- Course & Title Section -->
           <div id="secCourseInfo" class="form-section">
             <div class="section-label">Course & Title</div>
+            <button id="resetBtn" class="secondary-btn" type="button">Reset to Default</button>
             <div class="field-group">
               <label for="title">Assignment Title</label>
               <textarea id="title" rows="2" placeholder="e.g. Role of ICT in Agricultural Extension & Rural Development"></textarea>
@@ -164,16 +166,9 @@
           </div>
           
         </form>
-
-
-
-
-          
-<!-- CLOSE THE FORM AND ASIDE HERE -->
-        </form>
       </aside>
 
-      <!-- RIGHT PANEL: LIVE PREVIEW (Now a sibling of formPanel) -->
+      <!-- RIGHT PANEL: LIVE PREVIEW -->
       <section id="previewPanel" class="panel preview-panel">
         <div id="previewHeading" class="panel-heading">
           <div>
@@ -182,9 +177,6 @@
           </div>
           <span class="a4-label">A4 Sheet • 1:1 Scale</span>
         </div>
-        ...
-
-
         
         <div id="previewStage" class="preview-stage">
           <!-- A4 COVER DOCUMENT -->
@@ -280,11 +272,10 @@
     </div>
   </main>
  
-
   <!-- ========================================== -->
   <!-- FOOTER                                     -->
   <!-- ========================================== -->
-    <footer id="mainFooter">
+  <footer id="mainFooter">
     <div class="footer-content">
       <span id="downloadCounter">Total PDFs downloaded: <strong class="js-download-count">—</strong></span>
 
@@ -305,8 +296,8 @@
   </footer>
 
   <!-- External JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
