@@ -280,7 +280,7 @@ footer {
 /* ========================================================= */
 .cover.sau .sau-frame {
   position: absolute;
-  inset: 12px; /* ADJUSTED: Reduced from 18px to shrink outer blank space */
+  inset: 16px; /* ADJUSTED: Increased from 12px to shrink the outer border */
   border: 2px solid #0f2b5c;
   pointer-events: none;
   z-index: 3;
@@ -321,7 +321,7 @@ footer {
 /* ========================================================= */
 .cover.sau .cover-inner {
   position: absolute;
-  inset: 20px; /* ADJUSTED: Reduced from 26px to match frame change */
+  inset: 24px; /* ADJUSTED: Increased to match the new smaller outer frame */
   padding: 24px 24px 32px;
   display: flex;
   flex-direction: column;
@@ -329,7 +329,7 @@ footer {
   justify-content: space-between;
   z-index: 2;
   box-sizing: border-box;
-  height: calc(100% - 40px); /* Adjust height calc based on new inset */
+  height: calc(100% - 48px); /* ADJUSTED: Updated height calc based on the 24px inset */
 }
 
 /* ========================================================= */
@@ -340,8 +340,8 @@ footer {
 }
 
 .cover.sau .preview-logo {
-  width: 260px; /* ADJUSTED: Increased from 190px */
-  height: 260px; /* ADJUSTED: Increased from 190px */
+  width: 240px; /* ADJUSTED: Scaled down slightly to fit new clustering better */
+  height: 240px; 
   object-fit: contain;
   display: block;
   margin: 0 auto;
@@ -355,7 +355,7 @@ footer {
   color: #ffffff;
   padding: 8px 40px;
   border-radius: 1px;
-  margin-top: 25px; /* ADJUSTED: Pushed box down further from the logo */
+  margin: 14px 0 8px 0; /* ADJUSTED: Fixed the massive 25px top gap */
 }
 
 .cover.sau .sau-doc-badge span {
@@ -376,6 +376,7 @@ footer {
   align-items: center;
   justify-content: center;
   height: 30px;
+  margin-bottom: 12px; /* ADJUSTED: Added spacing above the title */
 }
 
 /* ========================================================= */
@@ -387,6 +388,7 @@ footer {
   border-bottom: 2px solid #1b5c7d;
   padding: 16px 10px;
   text-align: center;
+  margin-bottom: 20px; /* ADJUSTED: Added spacing below the title */
 }
 
 .cover.sau .preview-title {
@@ -412,6 +414,7 @@ footer {
   line-height: 1.5;
   color: #000000;
   font-weight: 600;
+  margin-bottom: auto; /* MAGIC FIX: This forces all the empty page space below this box, keeping the top elements tightly grouped. */
 }
 
 .cover.sau .sau-course-box span {
