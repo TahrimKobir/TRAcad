@@ -1,18 +1,32 @@
 /**
  * ==========================================
+ * TRACAD ASSIGNMENT COVER STUDIO
+ * PDF Generation with Native Print Engine
+ * ==========================================
+ * 
+ * Features:
+ * - No html2pdf.js (uses native browser print)
+ * - Single event listeners (no duplicates)
+ * - A4 210×297mm single-page output
+ * - Sharp vector PDF (not screenshot)
+ * - LocalStorage persistence
+ * - Custom logo support
+ */
+
+/**
+ * ==========================================
  * 1. UTILITY FUNCTIONS
  * ==========================================
  */
 const $ = (id) => document.getElementById(id);
 
 function getValue(id) {
-  return $(id) ?$(id).value.trim() : "";
+  return $(id) ? $(id).value.trim() : "";
 }
 
 function safeText(value, fallback) {
   return value || fallback;
 }
-
 
 /**
  * ==========================================
@@ -33,17 +47,20 @@ const defaults = {
   semester: "00",
   session: "2022-23",
   teacherName: "Course teacher name",
-  teacherDesignation: "Designetion",
-  teacherUniversity: "Sylhet Agricultural University, Sylhet-3100" // Added new field default
+  teacherDesignation: "Designation",
+  teacherUniversity: "Sylhet Agricultural University, Sylhet-3100"
 };
 
 const fields = Object.keys(defaults);
 
-
 /**
  * ==========================================
- * 3. CORE LOGIC (Update, Load, Save)
+ * 3. CORE LOGIC - Update, Load, Save
  * ==========================================
+ */
+
+/**
+ * Update preview elements with current form values
  */
 function updatePreview() {
   const institution = getValue("institution");
@@ -64,7 +81,7 @@ function updatePreview() {
   
   // Teacher Info
   $("previewTeacher").textContent = safeText(teacher, "Course teacher name");
-  $("previewDesignation").textContent = safeText(designation, "Designetion");
+  $("previewDesignation").textContent = safeText(designation, "Designation");
   $("previewDepartment2").textContent = safeText(department, "Department Name");
   $("previewTeacherUniversity").textContent = safeText(teacherUniv, "Sylhet Agricultural University, Sylhet-3100");
   
@@ -80,25 +97,34 @@ function updatePreview() {
   $("docFooterBrand").textContent = `${safeText(institution, "SYLHET AGRICULTURAL UNIVERSITY")}, SYLHET`.toUpperCase();
 }
 
+/**
+ * Load default values into form
+ */
 function loadDefaults() {
   fields.forEach(id => {
-    if ($(id))$(id).value = defaults[id];
+    if ($(id)) $(id).value = defaults[id];
   });
   updatePreview();
 }
 
+/**
+ * Save form values to localStorage
+ */
 function saveLocal() {
   const data = {};
   fields.forEach(id => data[id] = getValue(id));
   localStorage.setItem("sau_assignment_cover_data", JSON.stringify(data));
 }
 
+/**
+ * Load form values from localStorage
+ */
 function loadLocal() {
   try {
     const data = JSON.parse(localStorage.getItem("sau_assignment_cover_data"));
     if (!data) return false;
     fields.forEach(id => {
-      if ($(id) && data[id] !== undefined)$(id).value = data[id];
+      if ($(id) && data[id] !== undefined) $(id).value = data[id];
     });
     return true;
   } catch {
@@ -106,6 +132,9 @@ function loadLocal() {
   }
 }
 
+/**
+ * Restore custom logo from localStorage
+ */
 function restoreLogo() {
   const logo = localStorage.getItem("sau_custom_logo");
   if (logo) {
@@ -117,109 +146,125 @@ function restoreLogo() {
 
 /**
  * ==========================================
- * 4. EVENT LISTENERS
+ * 4. EVENT LISTENERS (SINGLE INSTANCES)
  * ==========================================
  */
-
-// Form Changes
-$("coverForm").addEventListener("input", () => {
-  updatePreview();
-  saveLocal();
-});
-$("coverForm").addEventListener("change", () => {
-  updatePreview();
-  saveLocal();
-});
-
-// Logo Upload
-$("logoInput").addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file || !file.type.startsWith("image/")) return;
-
-  const reader = new FileReader();
-  reader.onload = e => {
-    $("previewLogo").src = e.target.result;
-    $("watermarkLogo").src = e.target.result;
-    $("logoLabel").textContent = file.name;
-    localStorage.setItem("sau_custom_logo", e.target.result);
-    updatePreview();
-  };
-  reader.readAsDataURL(file);
-});
-
-// Reset Button
-$("resetBtn").addEventListener("click", () => {
-  if (!confirm("Reset all fields to default values?")) return;
-  localStorage.removeItem("sau_assignment_cover_data");
-  localStorage.removeItem("sau_custom_logo");
-  $("logoInput").value = "";
-  $("previewLogo").src = "favicon1.png";
-  $("watermarkLogo").src = "favicon1.png";
-  $("logoLabel").textContent = "Upload High-Res Logo";
-  loadDefaults();
-});
-
 
 /**
- * ==========================================
- * 5. EXPORT AND PRINT (Actions & Analytics)
- * ==========================================
+ * Form input changes - update preview and save
  */
+if ($("coverForm")) {
+  $("coverForm").addEventListener("input", () => {
+    updatePreview();
+    saveLocal();
+  });
 
-// Function to track PDF downloads in your Python API
-async function logPdfGeneration() {
-  try {
-    const res = await fetch("https://your-vercel-app.vercel.app/api/counter", {
-      method: "POST"
-    });
-    const data = await res.json();
-    console.log("Total PDFs generated globally:", data.total_generated);
-  } catch (err) {
-    console.warn("Could not log PDF analytics:", err);
-  }
+  $("coverForm").addEventListener("change", () => {
+    updatePreview();
+    saveLocal();
+  });
 }
 
-// Native Browser Print
-$("printBtn").addEventListener("click", () => {
-  window.print();
-});
+/**
+ * Logo upload handler
+ */
+if ($("logoInput")) {
+  $("logoInput").addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (!file || !file.type.startsWith("image/")) {
+      alert("Please upload a valid image file");
+      return;
+    }
 
-// Generate True Vector PDF Output via Native Print Dialog
-$("downloadBtn").addEventListener("click", async () => {
-  const button = $("downloadBtn");
-  const originalHtml = button.innerHTML;
-  
-  // UI Loading State
-  button.disabled = true;
-  button.innerHTML = "Opening Print Dialog…";
+    const reader = new FileReader();
+    reader.onload = e => {
+      $("previewLogo").src = e.target.result;
+      $("watermarkLogo").src = e.target.result;
+      $("logoLabel").textContent = file.name;
+      localStorage.setItem("sau_custom_logo", e.target.result);
+      updatePreview();
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
-  try {
-    // Log the download to your backend analytics
-    await logPdfGeneration();
+/**
+ * Reset button - clear all data
+ */
+if ($("resetBtn")) {
+  $("resetBtn").addEventListener("click", () => {
+    if (!confirm("Reset all fields to default values?")) return;
     
-    // Trigger the browser's native high-quality PDF engine
-    // (User selects "Save as PDF", ensuring sharp vectors and correct size)
+    localStorage.removeItem("sau_assignment_cover_data");
+    localStorage.removeItem("sau_custom_logo");
+    
+    if ($("logoInput")) $("logoInput").value = "";
+    $("previewLogo").src = "favicon1.png";
+    $("watermarkLogo").src = "favicon1.png";
+    $("logoLabel").textContent = "Upload High-Res Logo";
+    
+    loadDefaults();
+  });
+}
+
+/**
+ * Print button - open native print dialog
+ */
+if ($("printBtn")) {
+  $("printBtn").addEventListener("click", () => {
     window.print();
-  } catch (error) {
-    console.error("PDF generation failed:", error);
-    alert("Something went wrong. Please use the Print button instead.");
-  } finally {
-    // Revert UI Loading State after the print dialog closes
-    button.disabled = false;
-    button.innerHTML = originalHtml;
-  }
-});
+  });
+}
+
+/**
+ * Download button - open print dialog for PDF save
+ * Uses native browser print engine (no html2pdf.js)
+ * User selects "Save as PDF" from print dialog
+ */
+if ($("downloadBtn")) {
+  $("downloadBtn").addEventListener("click", async () => {
+    const button = $("downloadBtn");
+    const originalHtml = button.innerHTML;
+    
+    button.disabled = true;
+    button.innerHTML = "Opening Print Dialog…";
+
+    try {
+      // Optional: Log PDF generation (if you have an API endpoint)
+      // await logPdfGeneration();
+      
+      // Trigger the browser's native print dialog
+      // User will select "Save as PDF" to export as vector PDF
+      window.print();
+    } catch (error) {
+      console.error("Print dialog error:", error);
+      alert("Could not open print dialog. Please use the Print button instead.");
+    } finally {
+      // Restore button state after print dialog closes
+      button.disabled = false;
+      button.innerHTML = originalHtml;
+    }
+  });
+}
 
 /**
  * ==========================================
- * 6. INITIALIZATION
+ * 5. INITIALIZATION (SINGLE INSTANCE)
  * ==========================================
+ * 
+ * This runs once when DOM is ready.
+ * No duplicate initialization.
  */
 window.addEventListener("DOMContentLoaded", () => {
+  // Load saved data or defaults
   if (!loadLocal()) {
     loadDefaults();
   } else {
     updatePreview();
   }
+  
+  // Restore custom logo if saved
   restoreLogo();
+  
+  console.log("✓ TRAcad Assignment Cover Studio initialized");
 });
