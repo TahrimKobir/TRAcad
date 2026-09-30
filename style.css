@@ -394,16 +394,7 @@ footer {
 .cover.sau .preview-title {
   margin: 0;
   font-family: 'Krungthep', 'Trebuchet MS', 'Arial Black', sans-serif;
-  font-size: 20px; /* ADJUSTED: Reduced from 26px to make the title smaller */
-  font-weight: 700;
-  color: #0a1f33;
-  line-height: 1.35;
-}
-
-.cover.sau .preview-title {
-  margin: 0;
-  font-family: 'Krungthep', 'Trebuchet MS', 'Arial Black', sans-serif;
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 700;
   color: #0a1f33;
   line-height: 1.35;
@@ -528,7 +519,6 @@ footer {
   object-fit: contain;
 }
 
-
 /* ========================================================= */
 /* [TAG: PRINT STYLES] - True Vector PDF Quality Setup       */
 /* ========================================================= */
@@ -543,6 +533,15 @@ footer {
     visibility: visible;
   }
   
+  /* Force exact A4 dimensions and remove extra body scrolling */
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
   /* Position the cover perfectly at the top left of the A4 page */
   #cover {
     position: absolute;
@@ -552,6 +551,8 @@ footer {
     height: 297mm;
     margin: 0;
     box-shadow: none; 
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   /* Force background colors and images (like the crest) to print */
