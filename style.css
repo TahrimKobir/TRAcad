@@ -520,22 +520,20 @@ footer {
 /* [TAG: PRINT STYLES] - A4 Vector PDF Quality Setup         */
 /* ========================================================= */
 @media print {
-  /* Background graphics / exact colors */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
   html, body {
-    width: 210mm !important;
-    height: 297mm !important;
+    width: auto !important;
+    height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     background: #ffffff !important;
   }
 
-  /* Hide everything except the cover */
   .topbar,
   .hero,
   .form-panel,
@@ -547,16 +545,16 @@ footer {
     display: none !important;
   }
 
-  /* Every ancestor of the cover: exactly one A4 page, clipped */
+  /* Wrappers take no space, so they can never create a 2nd page */
   .app-shell,
   .workspace,
   .preview-panel,
   .preview-stage {
     display: block !important;
     position: static !important;
-    width: 210mm !important;
+    width: auto !important;
     max-width: none !important;
-    height: 297mm !important;
+    height: 0 !important;
     min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -564,11 +562,14 @@ footer {
     border-radius: 0 !important;
     box-shadow: none !important;
     background: transparent !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
 
+  /* The cover is pinned to the page itself: exactly one A4 sheet */
   #cover {
-    display: block !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 210mm !important;
     height: 297mm !important;
     margin: 0 !important;
@@ -576,10 +577,19 @@ footer {
     box-shadow: none !important;
     overflow: hidden !important;
     transform: none !important;
-    zoom: 1 !important;
     break-inside: avoid !important;
     break-after: avoid !important;
     page-break-inside: avoid !important;
     page-break-after: avoid !important;
+  }
+}
+
+/* Fallback: if the chosen paper is shorter than A4 (e.g. Letter),
+   shrink the cover slightly so nothing gets cut off. Best-effort,
+   exact A4 still needs Paper size = A4 in the dialog. */
+@media print and (max-height: 290mm) {
+  #cover {
+    transform: scale(0.93) !important;
+    transform-origin: top left !important;
   }
 }
