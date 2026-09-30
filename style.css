@@ -262,6 +262,27 @@ button { cursor: pointer; }
 }
 
 /* [TAG: FORM CONTROLS] */
+/* Header alignment for Course & Title reset button */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+.section-header .section-label {
+  margin: 0;
+  flex: 1;
+}
+
+#resetBtn {
+  padding: 6px 14px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
 .field-group { margin-bottom: 16px; }
 .section-label {
   margin: 28px 0 16px; display: flex; align-items: center; gap: 10px;
