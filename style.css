@@ -209,6 +209,7 @@ input::placeholder, textarea::placeholder { color: #a1a1aa; }
 }
 .primary-btn { color: #ffffff; background: var(--primary); }
 .primary-btn:hover { background: var(--primary-dark); }
+.primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .secondary-btn { color: var(--ink); background: #ffffff; border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
 .secondary-btn:hover { background: var(--soft-bg); }
 
@@ -248,7 +249,7 @@ footer {
 /* [TAG: COVER PAGE A4 SETUP] - Base canvas and dimensions   */
 /* ========================================================= */
 @page {
-  size: A4;
+  size: A4 portrait;
   margin: 0;
 }
 
@@ -280,7 +281,7 @@ footer {
 /* ========================================================= */
 .cover.sau .sau-frame {
   position: absolute;
-  inset: 16px; /* ADJUSTED: Increased from 12px to shrink the outer border */
+  inset: 16px;
   border: 2px solid #0f2b5c;
   pointer-events: none;
   z-index: 3;
@@ -321,7 +322,7 @@ footer {
 /* ========================================================= */
 .cover.sau .cover-inner {
   position: absolute;
-  inset: 24px; /* ADJUSTED: Increased to match the new smaller outer frame */
+  inset: 24px;
   padding: 24px 24px 32px;
   display: flex;
   flex-direction: column;
@@ -329,7 +330,7 @@ footer {
   justify-content: space-between;
   z-index: 2;
   box-sizing: border-box;
-  height: calc(100% - 48px); /* ADJUSTED: Updated height calc based on the 24px inset */
+  height: calc(100% - 48px);
 }
 
 /* ========================================================= */
@@ -340,7 +341,7 @@ footer {
 }
 
 .cover.sau .preview-logo {
-  width: 240px; /* ADJUSTED: Scaled down slightly to fit new clustering better */
+  width: 240px;
   height: 240px; 
   object-fit: contain;
   display: block;
@@ -355,7 +356,7 @@ footer {
   color: #ffffff;
   padding: 8px 40px;
   border-radius: 1px;
-  margin: 14px 0 8px 0; /* ADJUSTED: Fixed the massive 25px top gap */
+  margin: 14px 0 8px 0;
 }
 
 .cover.sau .sau-doc-badge span {
@@ -376,7 +377,7 @@ footer {
   align-items: center;
   justify-content: center;
   height: 30px;
-  margin-bottom: 12px; /* ADJUSTED: Added spacing above the title */
+  margin-bottom: 12px;
 }
 
 /* ========================================================= */
@@ -394,7 +395,7 @@ footer {
 .cover.sau .preview-title {
   margin: 0;
   font-family: 'Krungthep', 'Trebuchet MS', 'Arial Black', sans-serif;
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 700;
   color: #0a1f33;
   line-height: 1.35;
@@ -414,7 +415,7 @@ footer {
   line-height: 1.5;
   color: #000000;
   font-weight: 600;
-  margin-bottom: auto; /* MAGIC FIX: This forces all the empty page space below this box, keeping the top elements tightly grouped. */
+  margin-bottom: auto;
 }
 
 .cover.sau .sau-course-box span {
@@ -434,10 +435,9 @@ footer {
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(27, 92, 125, 0.04);
   background: #ffffff;
-  margin-bottom: 40px; /* ADJUSTED: Added to lift the grid up and balance the gaps */
+  margin-bottom: 40px;
 }
 
-/* [TAG: SUBMISSION GRID HEADER] - Titles for columns        */
 .cover.sau .grid-header {
   display: flex;
   width: 100%;
@@ -458,14 +458,12 @@ footer {
 .cover.sau .grid-header .col-left { padding-left: 25px; }
 .cover.sau .grid-header .col-right { padding-left: 25px; }
 
-/* [TAG: SUBMISSION GRID BODY] - Content for columns         */
 .cover.sau .grid-body {
   display: flex;
   width: 100%;
   padding: 20px 0;
 }
 
-/* [TAG: SUBMISSION GRID LEFT COLUMN]                        */
 .cover.sau .col-left {
   width: 50%;
   border-right: 1.5px dashed rgba(27, 92, 125, 0.35); 
@@ -473,14 +471,12 @@ footer {
   padding-left: 25px;
 }
 
-/* [TAG: SUBMISSION GRID RIGHT COLUMN]                       */
 .cover.sau .col-right {
   width: 50%;
   padding-left: 25px;
   padding-right: 15px;
 }
 
-/* [TAG: SUBMISSION GRID TYPOGRAPHY]                         */
 .cover.sau .bold-text { font-weight: 600; color: #111; }
 .cover.sau .row-text { display: flex; gap: 8px; margin-bottom: 5px; }
 .cover.sau .row-text .lbl { font-weight: 600; color: #333; }
@@ -520,43 +516,25 @@ footer {
 }
 
 /* ========================================================= */
-/* [TAG: PRINT STYLES] - True Vector PDF Quality Setup       */
+/* [TAG: PRINT STYLES] - A4 Vector PDF Quality Setup         */
 /* ========================================================= */
 @media print {
-  /* 1. Hide everything normally */
-  body * {
-    visibility: hidden;
+  /* Hide all UI except cover */
+  body > * {
+    display: none !important;
   }
-
-  /* 2. Reset the page and body completely */
-  html, body {
-    background: #ffffff !important;
-    margin: 0 !important;
-    padding: 0 !important;
+  
+  header, main, footer {
+    display: none !important;
   }
-
-  /* 3. Strip all layout constraints & spacing from parent wrappers */
-  .app-shell, 
-  .workspace, 
-  .panel,
-  .preview-panel, 
-  .preview-stage {
+  
+  /* Show only the cover element */
+  #cover {
     display: block !important;
-    position: static !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    height: auto !important;
-    transform: none !important;
-    overflow: visible !important;
-    border: none !important;
-  }
-
-  /* 4. Position the cover exactly at the top left of the physical paper */
-  #cover, #cover * {
     visibility: visible;
   }
   
+  /* Position cover at page origin */
   #cover {
     position: absolute !important;
     left: 0 !important;
@@ -569,15 +547,30 @@ footer {
     page-break-after: avoid !important;
     page-break-inside: avoid !important;
   }
+  
+  /* Ensure all cover children are visible */
+  #cover,
+  #cover * {
+    visibility: visible !important;
+  }
 
-  /* Ensure background colors/graphics print */
+  /* Force exact colors and graphics to print */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
+  /* Set page properties */
   @page {
     size: A4 portrait;
     margin: 0;
+    padding: 0;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
   }
 }
