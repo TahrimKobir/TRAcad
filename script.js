@@ -18,23 +18,23 @@ function safeText(value, fallback) {
 
 /* 2. CONFIGURATION & DEFAULTS */
 const defaults = {
-  institution: "Sylhet Agricultural University",
-  department: "Department Name",
+  institution: "Sylhet Agricultural University, Sylhet",
+  department: "Department of Agronomy and Haor Agriculture",
   documentType: "Assignment",
-  courseName: "Extension Communication & Group Approaches",
-  courseCode: "AGEXT 211",
-  title: "Assignment Title",
-  studentName: "Md Tahrim Kobir Riyad",
-  studentId: "1234567",
-  reg: "1234",
-  level: "00",
-  semester: "00",
-  session: "2022-23",
-  teacherName: "Course teacher name",
-  teacherDesignation: "Designation",
-  teacherUniversity: "Sylhet Agricultural University, Sylhet-3100"
+  courseName: "Seed Science (theory)",
+  courseCode: "AGRHA 201(T)",
+  title: "Effect of Nitrogen Management on Growth, Yield, and Nutrient Use Efficiency of Rice",
+  studentName: "Tanvir Ahmed", 
+  studentId: "0000000",
+  reg: "0000",
+  level: "02",
+  semester: "01",
+  session: "2023-24",
+  teacherName: "Dr. Nazrul Islam",
+  teacherDesignation: "Professor",
+   teacherDepartment: "Department of Agronomy and Haor Agriculture",
+  teacherUniversity: "Sylhet Agricultural University, Sylhet"
 };
-
 const fields = Object.keys(defaults);
 
 /* 3. CORE LOGIC - Update, Load, Save */
