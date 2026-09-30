@@ -5,8 +5,7 @@
  * ==========================================
  */
 
-/* VERSION MARKER - open browser console (F12) and look for this line to confirm the new file is loaded */
-console.log("TRAcad script.js v3 loaded");
+console.log("TRAcad script.js v4 loaded");
 
 /* 1. UTILITIES */
 const $ = (id) => document.getElementById(id);
@@ -19,7 +18,6 @@ function safeText(value, fallback) {
   return value || fallback;
 }
 
-// Safe way to write text into a preview element (no optional-chaining assignment)
 function setText(id, value) {
   const el = $(id);
   if (el) el.textContent = value;
@@ -27,11 +25,8 @@ function setText(id, value) {
 
 /* 2. CONFIGURATION & DEFAULTS */
 const defaults = {
-  // Only the badge keeps a value; everything else stays blank
   documentType: "Assignment",
   institution: "",
-
-  // Institution, Course & Title, Teacher and Student fields stay blank - the form only shows "e.g." placeholders
   department: "",
   courseName: "",
   courseCode: "",
@@ -50,15 +45,46 @@ const defaults = {
 };
 const fields = Object.keys(defaults);
 
-// New storage key (v2) so old saved values (Tanvir Ahmed, Professor, etc.) are ignored automatically
 const FORM_KEY = "tracad_cover_form_v2";
 const OLD_FORM_KEY = "sau_assignment_cover_data";
 try { localStorage.removeItem(OLD_FORM_KEY); } catch (e) {}
 
-/* 3. CORE LOGIC - Update, Load, Save */
+/* 3. INSTITUTION BINDING
+   If the cover HTML has hard-coded "Sylhet ..." text, turn it into a live-bound
+   element so it shows ONLY what the user types in the University field.
+   (Best permanent fix: replace that text in index.html with
+   <span data-institution>University Name</span>) */
+function autoBindInstitution() {
+  const cover = $("cover");
+  if (!cover) return;
+
+  const walker = document.createTreeWalker(cover, NodeFilter.SHOW_TEXT);
+  const hits = [];
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    if (/sylhet/i.test(node.nodeValue) && !node.parentElement.closest("[data-institution], #docFooterBrand")) {
+      hits.push(node);
+    }
+  }
+  hits.forEach((node) => {
+    const span = document.createElement("span");
+    span.setAttribute("data-institution", "");
+    span.textContent = node.nodeValue;
+    node.parentNode.replaceChild(span, node);
+  });
+}
+
+/* 4. CORE LOGIC - Update, Load, Save */
 function updatePreview() {
   const institution = getValue("institution");
   const department = getValue("department");
+
+  // Institution (every bound element) - only what the user typed
+  const instText = safeText(institution, "University Name");
+  document.querySelectorAll("[data-institution], #previewInstitution").forEach((el) => {
+    el.textContent = instText;
+  });
+  setText("previewDepartment", safeText(department, "Department Name"));
 
   // Document Info
   setText("previewType", getValue("documentType") || "Assignment");
@@ -69,7 +95,7 @@ function updatePreview() {
   // Teacher Info
   setText("previewTeacher", safeText(getValue("teacherName"), "Course teacher name"));
   setText("previewDesignation", safeText(getValue("teacherDesignation"), "Designation"));
-  setText("previewDepartment2", safeText(department, "Department Name"));
+  setText("previewDepartment2", safeText(getValue("teacherDepartment") || department, "Department Name"));
   setText("previewTeacherUniversity", safeText(getValue("teacherUniversity"), "University Name"));
 
   // Student Info
@@ -81,8 +107,8 @@ function updatePreview() {
   setText("previewGroup", safeText(getValue("group"), "A"));
   setText("previewSession", safeText(getValue("session"), "2022-23"));
 
-  // Footer brand: exactly what is typed in University Name (upper case), nothing added automatically
-  setText("docFooterBrand", safeText(institution, "University Name").toUpperCase());
+  // Footer brand
+  setText("docFooterBrand", instText.toUpperCase());
 }
 
 function loadDefaults() {
@@ -90,7 +116,6 @@ function loadDefaults() {
     const el = $(id);
     if (!el) return;
     el.value = defaults[id];
-    // <select> with no matching option would become empty -> pick the first option (e.g. "Select designation")
     if (el.tagName === "SELECT" && el.selectedIndex === -1) el.selectedIndex = 0;
   });
   updatePreview();
@@ -132,7 +157,7 @@ function restoreLogo() {
   }
 }
 
-/* 4. DOWNLOAD COUNTER (Python backend) */
+/* 5. DOWNLOAD COUNTER (Python backend) */
 const COUNTER_API = "https://tahrim.pythonanywhere.com";
 const COUNT_CACHE_KEY = "tracad_last_count";
 
@@ -140,7 +165,6 @@ function counterEnabled() {
   return !COUNTER_API.includes("YOUR-BACKEND-URL");
 }
 
-// Works with class="js-download-count" and the old id="downloadCount"
 function paintCount(total) {
   const text = Number(total).toLocaleString();
   document.querySelectorAll(".js-download-count, #downloadCount").forEach((el) => {
@@ -154,7 +178,6 @@ function showCount(total) {
   try { localStorage.setItem(COUNT_CACHE_KEY, String(total)); } catch (e) {}
 }
 
-// Show the last known number instantly, without waiting for the server
 function showCachedCount() {
   try {
     const raw = localStorage.getItem(COUNT_CACHE_KEY);
@@ -190,21 +213,19 @@ async function recordDownload() {
   }
 }
 
-/* 5. PDF PIPELINE */
+/* 6. PDF PIPELINE */
 const originalTitle = document.title;
 let isExporting = false;
 
 const A4_W_PX = 794;   // 210mm @ 96dpi
 const A4_H_PX = 1123;  // 297mm @ 96dpi
 
-// File name: "<Course code> Assign Cover By TRAcad"
 function buildPdfName() {
   const code = getValue("courseCode");
   const name = `${code ? code + " " : ""}Assign Cover By TRAcad`;
   return name.replace(/[\\/:*?"<>|]+/g, "").replace(/\s+/g, " ").trim();
 }
 
-// Wait for fonts + images inside `root`
 function waitForAssets(root) {
   const tasks = [];
   if (document.fonts && document.fonts.ready) tasks.push(document.fonts.ready);
@@ -222,7 +243,6 @@ function waitForAssets(root) {
   return Promise.race([Promise.all(tasks), timeout]);
 }
 
-// Off-screen, fixed-size copy of the cover (independent of screen size/scroll/zoom)
 function makeExportClone() {
   const stage = document.createElement("div");
   stage.style.cssText =
@@ -232,14 +252,13 @@ function makeExportClone() {
   const clone = $("cover").cloneNode(true);
   clone.removeAttribute("id");
   clone.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
-  clone.style.cssText = `width:${A4_W_PX}px;height:${A4_H_PX}px;margin:0;`;
+  clone.style.cssText = `width:${A4_W_PX}px;height:${A4_H_PX}px;margin:0;transform:none;`;
 
   stage.appendChild(clone);
   document.body.appendChild(stage);
   return { stage, clone };
 }
 
-// Direct A4 PDF download (no print dialog)
 async function downloadPdf() {
   if (isExporting) return;
   isExporting = true;
@@ -263,7 +282,7 @@ async function downloadPdf() {
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 900;
 
     const canvas = await window.html2canvas(made.clone, {
-      scale: isMobile ? 3 : 4,     // keeps canvas within phone memory limits
+      scale: isMobile ? 3 : 4,
       width: A4_W_PX,
       height: A4_H_PX,
       windowWidth: A4_W_PX,
@@ -279,9 +298,8 @@ async function downloadPdf() {
     const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
     pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 210, 297, undefined, "FAST");
 
-    // Save with our own file name: "<Course code> Assign Cover By TRAcad.pdf"
     const pdfName = buildPdfName();
-    pdf.setProperties({ title: pdfName }); // used as the name if a browser opens the PDF in a viewer
+    pdf.setProperties({ title: pdfName });
     const blobUrl = URL.createObjectURL(pdf.output("blob"));
     const link = document.createElement("a");
     link.href = blobUrl;
@@ -291,7 +309,7 @@ async function downloadPdf() {
     link.remove();
     setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
 
-    recordDownload(); // count only successful PDFs
+    recordDownload();
   } catch (error) {
     console.error("PDF download error:", error);
     alert("Direct download failed. Opening print dialog instead - choose 'Save as PDF' and paper size A4.");
@@ -304,7 +322,6 @@ async function downloadPdf() {
   }
 }
 
-// Print Document button (native print)
 async function printCover() {
   updatePreview();
   await waitForAssets(document);
@@ -313,75 +330,72 @@ async function printCover() {
   document.title = originalTitle;
 }
 
-/* 6. EVENT LISTENERS (each registered exactly once) */
-
-// One listener for the whole form ("input" also fires for <select> and <textarea>)
-if ($("coverForm")) {
-  const onFormChange = () => {
-    updatePreview();
-    saveLocal();
-  };
-  $("coverForm").addEventListener("input", onFormChange);
-  $("coverForm").addEventListener("change", onFormChange); // dropdowns (select) fire "change"
-}
-
-// Logo upload
-if ($("logoInput")) {
-  $("logoInput").addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (!file || !file.type.startsWith("image/")) {
-      alert("Please upload a valid image file");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      $("previewLogo").src = e.target.result;
-      $("watermarkLogo").src = e.target.result;
-      $("logoLabel").textContent = file.name;
-      try {
-        localStorage.setItem("sau_custom_logo", e.target.result);
-      } catch (err) {
-        /* image too large to persist - still works for this session */
-      }
+/* 7. EVENT LISTENERS - registered once, inside init(), so they always find the DOM */
+function bindEvents() {
+  // Delegated on document: works no matter what the form's id is or when the script loads
+  const onFieldEvent = (e) => {
+    const t = e.target;
+    if (t && t.id && fields.includes(t.id)) {
       updatePreview();
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-// Reset
-if ($("resetBtn")) {
-  $("resetBtn").addEventListener("click", () => {
-    if (!confirm("Reset all fields to default values?")) return;
-
-    try {
-      localStorage.removeItem(FORM_KEY);
-      localStorage.removeItem("sau_custom_logo");
-    } catch (e) {
-      /* ignore */
+      saveLocal();
     }
+  };
+  document.addEventListener("input", onFieldEvent);
+  document.addEventListener("change", onFieldEvent);
 
-    if ($("logoInput")) $("logoInput").value = "";
-    $("previewLogo").src = "favicon1.png";
-    $("watermarkLogo").src = "favicon1.png";
-    $("logoLabel").textContent = "Upload High-Res Logo";
+  // Logo upload
+  if ($("logoInput")) {
+    $("logoInput").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file || !file.type.startsWith("image/")) {
+        alert("Please upload a valid image file");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        $("previewLogo").src = e.target.result;
+        $("watermarkLogo").src = e.target.result;
+        $("logoLabel").textContent = file.name;
+        try {
+          localStorage.setItem("sau_custom_logo", e.target.result);
+        } catch (err) {
+          /* too large to persist - still works this session */
+        }
+        updatePreview();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
-    loadDefaults();
+  // Reset
+  if ($("resetBtn")) {
+    $("resetBtn").addEventListener("click", () => {
+      if (!confirm("Reset all fields to default values?")) return;
+      try {
+        localStorage.removeItem(FORM_KEY);
+        localStorage.removeItem("sau_custom_logo");
+      } catch (e) {}
+
+      if ($("logoInput")) $("logoInput").value = "";
+      $("previewLogo").src = "favicon1.png";
+      $("watermarkLogo").src = "favicon1.png";
+      $("logoLabel").textContent = "Upload High-Res Logo";
+      loadDefaults();
+    });
+  }
+
+  if ($("downloadBtn")) $("downloadBtn").addEventListener("click", downloadPdf);
+  if ($("printBtn")) $("printBtn").addEventListener("click", printCover);
+
+  window.addEventListener("afterprint", () => {
+    document.title = originalTitle;
   });
 }
 
-// Download PDF and Print buttons
-if ($("downloadBtn")) $("downloadBtn").addEventListener("click", downloadPdf);
-if ($("printBtn")) $("printBtn").addEventListener("click", printCover);
-
-// Safety: restore page title after the print dialog closes
-window.addEventListener("afterprint", () => {
-  document.title = originalTitle;
-});
-
-/* 7. INITIALIZATION */
-window.addEventListener("DOMContentLoaded", () => {
+/* 8. INITIALIZATION */
+function init() {
+  autoBindInstitution();
+  bindEvents();
   if (!loadLocal()) {
     loadDefaults();
   } else {
@@ -390,4 +404,10 @@ window.addEventListener("DOMContentLoaded", () => {
   restoreLogo();
   loadDownloadCount();
   console.log("✓ TRAcad Assignment Cover Studio initialized");
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
