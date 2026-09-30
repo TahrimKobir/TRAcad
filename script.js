@@ -29,7 +29,7 @@ const defaults = {
   reg: "2000",
   level: "02",
   semester: "01",
-  group: "A"
+  group: "A",
   session: "2024-25",
   teacherName: "Dr. Prof. Nazrul Islam",
   teacherDesignation: "Professor",
