@@ -120,7 +120,7 @@ function restoreLogo() {
 /* 4. DOWNLOAD COUNTER (Python backend) */
 // Backend deploy করার পর নিজের URL এখানে দিন, শেষে "/" ছাড়া
 // যেমন: "https://yourname.pythonanywhere.com"
-const COUNTER_API = "https://YOUR-BACKEND-URL";
+const COUNTER_API = "https://tahrim.pythonanywhere.com";
 
 function counterEnabled() {
   return !COUNTER_API.includes("YOUR-BACKEND-URL");
