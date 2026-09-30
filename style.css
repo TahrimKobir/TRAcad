@@ -341,7 +341,7 @@ footer {
 
 .cover.sau .preview-logo {
   width: 300px; /* ADJUSTED: Increased from 190px */
-  height: 3000px; /* ADJUSTED: Increased from 190px */
+  height: 300px; /* ADJUSTED: Increased from 190px */
   object-fit: contain;
   display: block;
   margin: 0 auto;
