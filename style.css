@@ -514,3 +514,41 @@ footer {
   height: 450px;
   object-fit: contain;
 }
+
+
+/* ========================================================= */
+/* [TAG: PRINT STYLES] - True Vector PDF Quality Setup       */
+/* ========================================================= */
+@media print {
+  /* Hide all buttons, toolbars, and app shell layout */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Make only the cover and its children visible */
+  #cover, #cover * {
+    visibility: visible;
+  }
+  
+  /* Position the cover perfectly at the top left of the A4 page */
+  #cover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    box-shadow: none; 
+  }
+
+  /* Force background colors and images (like the crest) to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0; /* Removes browser default headers/footers */
+  }
+}
