@@ -23,6 +23,38 @@
 }
 
 
+
+/* Mobile / Phone View (Default: Stacked Vertically) */
+.workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+.form-panel, 
+.preview-panel {
+  width: 100%;
+}
+
+/* Desktop / Web View (Side-by-Side) */
+@media (min-width: 992px) {
+  .workspace {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .form-panel {
+    flex: 0 0 420px; /* Fixed sidebar width for form */
+  }
+
+  .preview-panel {
+    flex: 1; /* Takes up remaining right-hand space */
+    min-width: 0;
+  }
+}
+
+
 /* ========================================================= */
 /* [TAG: CSS VARIABLES - RE-BRANDED FOR TRACAD]              */
 /* ========================================================= */
