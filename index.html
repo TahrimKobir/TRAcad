@@ -1,41 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- ========================================== -->
+  <!-- META & STYLES SECTION                      -->
+  <!-- ========================================== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Free academic assignment cover generator">
-  <title>TRAcad Assignment Cover Generator | By Md Tahrim Kobir Riyad</title>
+  <meta name="description" content="Futuristic Free academic assignment cover generator">
+  <title>TRAcad Assignment Cover Studio | By Md Tahrim Kobir Riyad</title>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
+
+  <!-- ========================================== -->
+  <!-- HEADER SECTION                             -->
+  <!-- ========================================== -->
+  <header id="topNavbar" class="topbar">
+    <div id="brandLogo" class="brand">
       <div class="brand-mark">TRAcad</div>
-      <div>
-        <strong>Assignment Cover Studio</strong>
-      </div>
+      <div><strong>Assignment Cover Studio</strong></div>
     </div>
-    <div class="developer-credit">
+    <div id="developerCredit" class="developer-credit">
       <span>Designed & Developed by</span>
       <strong>Md Tahrim Kobir Riyad</strong>
     </div>
   </header>
 
-  <main class="app-shell">
-    <section class="hero">
-      <div>
+  <!-- ========================================== -->
+  <!-- MAIN APP CONTAINER                         -->
+  <!-- ========================================== -->
+  <main id="mainAppShell" class="app-shell">
+    
+    <!-- ========================================== -->
+    <!-- HERO SECTION                               -->
+    <!-- ========================================== -->
+    <section id="heroSection" class="hero">
+      <div class="hero-content">
         <h1>Generate Print-Ready Assignment Cover Pages</h1>
         <p class="hero-text">Customize student, course, and department details with exact layout and typography specifications.</p>
       </div>
     </section>
 
-    <div class="workspace">
-      <!-- Form Input Panel -->
-      <aside class="panel form-panel">
-        <div class="panel-heading">
+    <div id="workspaceContainer" class="workspace">
+      
+      <!-- ========================================== -->
+      <!-- FORM INPUT PANEL (LEFT)                    -->
+      <!-- ========================================== -->
+      <aside id="formPanel" class="panel form-panel">
+        <div id="formHeading" class="panel-heading">
           <div>
             <span class="step">01</span>
             <h2>Cover Details</h2>
@@ -44,108 +63,124 @@
         </div>
 
         <form id="coverForm">
-          <div class="section-label">Course & Title</div>
           
-          <div class="field-group">
-            <label for="title">Assignment Title</label>
-            <textarea id="title" rows="2" placeholder="Enter assignment title"></textarea>
-          </div>
-
-          <div class="field-group">
-            <label for="courseName">Course Name</label>
-            <input id="courseName" type="text" placeholder="e.g. Extension Communication & Group Approaches">
-          </div>
-
-          <div class="grid-2">
+          <!-- Section 1: Course & Title -->
+          <div id="secCourseInfo" class="form-section">
+            <div class="section-label">Course & Title</div>
             <div class="field-group">
-              <label for="courseCode">Course Code</label>
-              <input id="courseCode" type="text" placeholder="e.g. AGEXT 211">
+              <label for="title">Assignment Title</label>
+              <textarea id="title" rows="2" placeholder="Enter assignment title"></textarea>
             </div>
             <div class="field-group">
-              <label for="documentType">Document Badge</label>
-              <select id="documentType">
-                <option>Assignment</option>
-                <option>Lab Report</option>
-                <option>Term Paper</option>
-                <option>Project Report</option>
-                <option>Class Report</option>
-              </select>
+              <label for="courseName">Course Name</label>
+              <input id="courseName" type="text" placeholder="e.g. Extension Communication & Group Approaches">
             </div>
-          </div>
-
-          <div class="section-label">Assigned By (Teacher)</div>
-          <div class="field-group">
-            <label for="teacherName">Course Teacher Name</label>
-            <input id="teacherName" type="text" placeholder="Course teacher name">
-          </div>
-          <div class="grid-2">
-            <div class="field-group">
-              <label for="teacherDesignation">Designation</label>
-              <input id="teacherDesignation" type="text" placeholder="e.g. Designation / Lecturer">
-            </div>
-            <div class="field-group">
-              <label for="department">Department</label>
-              <input id="department" type="text" placeholder="e.g. Department Name">
+            <div class="grid-2">
+              <div class="field-group">
+                <label for="courseCode">Course Code</label>
+                <input id="courseCode" type="text" placeholder="e.g. AGEXT 211">
+              </div>
+              <div class="field-group">
+                <label for="documentType">Document Badge</label>
+                <select id="documentType">
+                  <option>Assignment</option>
+                  <option>Lab Report</option>
+                  <option>Term Paper</option>
+                  <option>Project Report</option>
+                  <option>Class Report</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div class="section-label">Submitted By (Student)</div>
-          <div class="field-group">
-            <label for="studentName">Student Name</label>
-            <input id="studentName" type="text" placeholder="Student name">
-          </div>
-
-          <div class="grid-2">
+          <!-- Section 2: Assigned By (Teacher) -->
+          <div id="secTeacherInfo" class="form-section">
+            <div class="section-label">Assigned By (Teacher)</div>
             <div class="field-group">
-              <label for="studentId">Student ID</label>
-              <input id="studentId" type="text" placeholder="e.g. 1234567">
+              <label for="teacherName">Course Teacher Name</label>
+              <input id="teacherName" type="text" placeholder="Course teacher name">
             </div>
-            <div class="field-group">
-              <label for="reg">Registration No.</label>
-              <input id="reg" type="text" placeholder="e.g. 1234">
+            <div class="grid-2">
+              <div class="field-group">
+                <label for="teacherDesignation">Designation</label>
+                <input id="teacherDesignation" type="text" placeholder="e.g. Designation / Lecturer">
+              </div>
+              <div class="field-group">
+                <label for="department">Department</label>
+                <input id="department" type="text" placeholder="e.g. Department Name">
+              </div>
             </div>
-          </div>
-
-          <div class="grid-3">
+            <!-- Dynamic Teacher University -->
             <div class="field-group">
-              <label for="level">Level</label>
-              <input id="level" type="text" placeholder="00">
-            </div>
-            <div class="field-group">
-              <label for="semester">Semester</label>
-              <input id="semester" type="text" placeholder="00">
-            </div>
-            <div class="field-group">
-              <label for="session">Session</label>
-              <input id="session" type="text" placeholder="2022-23">
+              <label for="teacherUniversity">University</label>
+              <input id="teacherUniversity" type="text" placeholder="e.g. Sylhet Agricultural University, Sylhet-3100" value="Sylhet Agricultural University, Sylhet-3100">
             </div>
           </div>
 
-          <div class="section-label">Institutional Settings</div>
-          <div class="field-group">
-            <label for="institution">University Name</label>
-            <input id="institution" type="text" placeholder="Sylhet Agricultural University">
+          <!-- Section 3: Submitted By (Student) -->
+          <div id="secStudentInfo" class="form-section">
+            <div class="section-label">Submitted By (Student)</div>
+            <div class="field-group">
+              <label for="studentName">Student Name</label>
+              <input id="studentName" type="text" placeholder="Student name">
+            </div>
+            <div class="grid-2">
+              <div class="field-group">
+                <label for="studentId">Student ID</label>
+                <input id="studentId" type="text" placeholder="e.g. 1234567">
+              </div>
+              <div class="field-group">
+                <label for="reg">Registration No.</label>
+                <input id="reg" type="text" placeholder="e.g. 1234">
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="field-group">
+                <label for="level">Level</label>
+                <input id="level" type="text" placeholder="00">
+              </div>
+              <div class="field-group">
+                <label for="semester">Semester</label>
+                <input id="semester" type="text" placeholder="00">
+              </div>
+              <div class="field-group">
+                <label for="session">Session</label>
+                <input id="session" type="text" placeholder="2022-23">
+              </div>
+            </div>
           </div>
 
-          <div class="field-group">
-            <label>Custom University Logo <span class="optional">(Optional)</span></label>
-            <label class="upload-box" for="logoInput">
-              <span class="upload-icon">⇪</span>
-              <span id="logoLabel">Upload High-Res Logo</span>
-              <input id="logoInput" type="file" accept="image/png,image/jpeg,image/webp">
-            </label>
+          <!-- Section 4: Institutional Settings -->
+          <div id="secInstitutionInfo" class="form-section">
+            <div class="section-label">Institutional Settings</div>
+            <div class="field-group">
+              <label for="institution">University Name</label>
+              <input id="institution" type="text" placeholder="Sylhet Agricultural University">
+            </div>
+            <div class="field-group">
+              <label>Custom University Logo <span class="optional">(Optional)</span></label>
+              <label class="upload-box" for="logoInput">
+                <span class="upload-icon">⇪</span>
+                <span id="logoLabel">Upload High-Res Logo</span>
+                <input id="logoInput" type="file" accept="image/png,image/jpeg,image/webp">
+              </label>
+            </div>
           </div>
 
-          <div class="actions">
+          <!-- Section 5: Form Actions -->
+          <div id="formActions" class="actions">
             <button id="downloadBtn" class="primary-btn" type="button">Download PDF <span>↓</span></button>
             <button id="printBtn" class="secondary-btn" type="button">Print Document</button>
           </div>
+
         </form>
       </aside>
 
-      <!-- Live Preview Panel -->
-      <section class="panel preview-panel">
-        <div class="panel-heading">
+      <!-- ========================================== -->
+      <!-- LIVE PREVIEW PANEL (RIGHT)                 -->
+      <!-- ========================================== -->
+      <section id="previewPanel" class="panel preview-panel">
+        <div id="previewHeading" class="panel-heading">
           <div>
             <span class="step">02</span>
             <h2>Live Canvas Preview</h2>
@@ -153,31 +188,33 @@
           <span class="a4-label">A4 Sheet • 1:1 Scale</span>
         </div>
 
-        <div class="preview-stage">
-          <!-- Reference Matched A4 Canvas -->
+        <div id="previewStage" class="preview-stage">
+          <!-- A4 Canvas Document -->
           <div id="cover" class="cover sau">
             
-            <!-- Outer Double Frame & Decorative Corners -->
-            <div class="sau-frame">
+            <!-- Document Frame -->
+            <div id="docFrame" class="sau-frame">
               <div class="corner-box tl"></div>
               <div class="corner-box tr"></div>
               <div class="corner-box bl"></div>
               <div class="corner-box br"></div>
             </div>
 
-            <div class="cover-inner">
-              <!-- Top Header Logo -->
-              <div class="sau-header">
+            <!-- Document Content Wrapper -->
+            <div id="docInnerContent" class="cover-inner">
+              
+              <!-- Cover Header & Logo -->
+              <div id="docHeader" class="sau-header">
                 <img id="previewLogo" class="preview-logo" src="favicon1.png" alt="Crest Logo">
               </div>
 
-              <!-- Document Badge (Krungthep) -->
-              <div class="sau-doc-badge">
+              <!-- Cover Badge -->
+              <div id="docBadge" class="sau-doc-badge">
                 <span id="previewType">Assignment</span>
               </div>
 
-              <!-- Ornament Vector Flourish (Mirrored) -->
-              <div class="sau-ornaments">
+              <!-- Document Ornaments -->
+              <div id="docOrnaments" class="sau-ornaments">
                 <svg width="60" height="26" viewBox="0 0 120 38" fill="none" style="transform: scaleX(-1);">
                   <path d="M10 22 C 30 6, 42 32, 60 18 C 78 32, 90 6, 110 22" stroke="#719db2" stroke-width="2.5" stroke-linecap="round"/>
                   <path d="M30 18 C 38 12, 44 22, 52 17" stroke="#719db2" stroke-width="1.8" stroke-linecap="round"/>
@@ -192,19 +229,19 @@
                 </svg>
               </div>
 
-              <!-- Assignment Title Box (Krungthep) -->
-              <div class="sau-title-wrap">
+              <!-- Cover Title -->
+              <div id="docTitleWrap" class="sau-title-wrap">
                 <h3 id="previewTitle" class="preview-title">Assignment Title</h3>
               </div>
 
-              <!-- Course Information Box (Romelio Sans) -->
-              <div class="sau-course-box">
+              <!-- Course Details Box -->
+              <div id="docCourseBox" class="sau-course-box">
                 <div>Course Name: <span id="previewCourseName">Extension Communication &amp; Group Approaches</span></div>
                 <div>Course Code: <span id="previewCourseCode">AGEXT 211</span></div>
               </div>
 
-              <!-- Structured Submission Grid -->
-              <div class="sau-submission-wrapper">
+              <!-- Teacher & Student Grid -->
+              <div id="docSubmissionGrid" class="sau-submission-wrapper">
                 <div class="grid-header">
                   <div class="col-left">Assigned By</div>
                   <div class="col-right">Submitted By</div>
@@ -216,8 +253,8 @@
                     <div id="previewDesignation" class="bold-text">Designation</div>
                     <div id="previewDepartment2" class="bold-text">Department Name</div>
                     <div class="sau-spacer"></div>
-                    <div id="previewFooterInstitution" class="bold-text">Sylhet Agricultural University</div>
-                    <div class="bold-text">Sylhet-3100</div>
+                    <!-- Teacher University dynamic element -->
+                    <div id="previewTeacherUniversity" class="bold-text">Sylhet Agricultural University, Sylhet-3100</div>
                   </div>
 
                   <div class="col-right">
@@ -231,12 +268,12 @@
                 </div>
               </div>
 
-              <!-- Bottom Double-Bordered Footer Box (BatmanForeverAlternate) -->
-              <div class="sau-footer-brand" id="previewFooterBrand">SYLHET AGRICULTURAL UNIVERSITY, SYLHET</div>
+              <!-- Footer Brand Bar -->
+              <div id="docFooterBrand" class="sau-footer-brand">SYLHET AGRICULTURAL UNIVERSITY, SYLHET</div>
             </div>
 
-            <!-- Light Centered Watermark Logo -->
-            <div class="sau-watermark" aria-hidden="true">
+            <!-- Background Watermark -->
+            <div id="docWatermark" class="sau-watermark" aria-hidden="true">
               <img id="watermarkLogo" src="favicon1.png" alt="Watermark Crest">
             </div>
 
@@ -246,12 +283,16 @@
     </div>
   </main>
 
-  <footer>
+  <!-- ========================================== -->
+  <!-- FOOTER SECTION                             -->
+  <!-- ========================================== -->
+  <footer id="mainFooter">
     <div class="footer-content">
       <span>Designed & Developed by <strong>Md Tahrim Kobir Riyad</strong></span>
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="script.js"></script>
 </body>
