@@ -5,7 +5,7 @@
  * ==========================================
  */
 
-console.log("TRAcad script.js v4 loaded");
+console.log("TRAcad script.js v5 loaded");
 
 /* 1. UTILITIES */
 const $ = (id) => document.getElementById(id);
@@ -50,10 +50,8 @@ const OLD_FORM_KEY = "sau_assignment_cover_data";
 try { localStorage.removeItem(OLD_FORM_KEY); } catch (e) {}
 
 /* 3. INSTITUTION BINDING
-   If the cover HTML has hard-coded "Sylhet ..." text, turn it into a live-bound
-   element so it shows ONLY what the user types in the University field.
-   (Best permanent fix: replace that text in index.html with
-   <span data-institution>University Name</span>) */
+   Turns hard-coded "Sylhet ..." text inside the cover into a live-bound element
+   so it shows ONLY what the user types in the University field. */
 function autoBindInstitution() {
   const cover = $("cover");
   if (!cover) return;
@@ -79,26 +77,25 @@ function updatePreview() {
   const institution = getValue("institution");
   const department = getValue("department");
 
-  // Institution (every bound element) - only what the user typed
   const instText = safeText(institution, "University Name");
   document.querySelectorAll("[data-institution], #previewInstitution").forEach((el) => {
     el.textContent = instText;
   });
   setText("previewDepartment", safeText(department, "Department Name"));
 
-  // Document Info
+  // Document info
   setText("previewType", getValue("documentType") || "Assignment");
   setText("previewTitle", safeText(getValue("title"), "Assignment Title"));
   setText("previewCourseName", safeText(getValue("courseName"), "Course Name"));
   setText("previewCourseCode", safeText(getValue("courseCode"), "Course Code"));
 
-  // Teacher Info
+  // Teacher info
   setText("previewTeacher", safeText(getValue("teacherName"), "Course teacher name"));
   setText("previewDesignation", safeText(getValue("teacherDesignation"), "Designation"));
   setText("previewDepartment2", safeText(getValue("teacherDepartment") || department, "Department Name"));
   setText("previewTeacherUniversity", safeText(getValue("teacherUniversity"), "University Name"));
 
-  // Student Info
+  // Student info
   setText("previewStudent", safeText(getValue("studentName"), "Student name"));
   setText("previewId", safeText(getValue("studentId"), "1234567"));
   setText("previewReg", safeText(getValue("reg"), "1234"));
@@ -157,12 +154,17 @@ function restoreLogo() {
   }
 }
 
-/* 5. DOWNLOAD COUNTER (Python backend) */
+/* 5. DOWNLOAD COUNTER (Python backend on PythonAnywhere) */
 const COUNTER_API = "https://tahrim.pythonanywhere.com";
 const COUNT_CACHE_KEY = "tracad_last_count";
 
 function counterEnabled() {
   return !COUNTER_API.includes("YOUR-BACKEND-URL");
+}
+
+function readTotal(data) {
+  const n = Number(data && (data.total ?? data.count ?? data.downloads));
+  return Number.isFinite(n) ? n : NaN;
 }
 
 function paintCount(total) {
@@ -192,11 +194,12 @@ async function loadDownloadCount() {
     try {
       const res = await fetch(`${COUNTER_API}/api/downloads`, { cache: "no-store" });
       if (!res.ok) throw new Error("HTTP " + res.status);
-      const data = await res.json();
-      showCount(data.total);
+      const total = readTotal(await res.json());
+      if (!Number.isFinite(total)) throw new Error("Response has no total/count field");
+      showCount(total);
       return;
     } catch (e) {
-      console.warn("Counter load failed:", e);
+      console.warn("Counter load failed (check backend + CORS):", e);
       await new Promise((r) => setTimeout(r, 1500));
     }
   }
@@ -206,10 +209,10 @@ async function recordDownload() {
   if (!counterEnabled()) return;
   try {
     const res = await fetch(`${COUNTER_API}/api/downloads`, { method: "POST" });
-    const data = await res.json();
-    showCount(data.total);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    showCount(readTotal(await res.json()));
   } catch (e) {
-    console.warn("Counter update failed:", e);
+    console.warn("Counter update failed (check backend + CORS):", e);
   }
 }
 
@@ -220,9 +223,22 @@ let isExporting = false;
 const A4_W_PX = 794;   // 210mm @ 96dpi
 const A4_H_PX = 1123;  // 297mm @ 96dpi
 
+/* Scales the on-screen cover to fit its box (desktop right column / mobile full width).
+   Only affects the preview - the PDF is rendered from an unscaled clone. */
+function fitPreview() {
+  const stage = $("previewStage");
+  if (!stage) return;
+  const cs = getComputedStyle(stage);
+  const avail = stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  if (avail <= 0) return;
+  const scale = Math.max(0.2, Math.min(1, avail / A4_W_PX));
+  stage.style.setProperty("--fit", scale.toFixed(3));
+}
+
+/* File name: "<course code> Assign by TRAcad.pdf"  e.g. "AGRHA 201(T) Assign by TRAcad.pdf" */
 function buildPdfName() {
   const code = getValue("courseCode");
-  const name = `${code ? code + " " : ""}Assign Cover By TRAcad`;
+  const name = `${code ? code + " " : ""}Assign by TRAcad`;
   return name.replace(/[\\/:*?"<>|]+/g, "").replace(/\s+/g, " ").trim();
 }
 
@@ -330,9 +346,8 @@ async function printCover() {
   document.title = originalTitle;
 }
 
-/* 7. EVENT LISTENERS - registered once, inside init(), so they always find the DOM */
+/* 7. EVENT LISTENERS */
 function bindEvents() {
-  // Delegated on document: works no matter what the form's id is or when the script loads
   const onFieldEvent = (e) => {
     const t = e.target;
     if (t && t.id && fields.includes(t.id)) {
@@ -390,6 +405,12 @@ function bindEvents() {
   window.addEventListener("afterprint", () => {
     document.title = originalTitle;
   });
+
+  // Keep the live preview fitted to its column
+  window.addEventListener("resize", fitPreview);
+  if ("ResizeObserver" in window && $("previewStage")) {
+    new ResizeObserver(fitPreview).observe($("previewStage"));
+  }
 }
 
 /* 8. INITIALIZATION */
@@ -402,6 +423,7 @@ function init() {
     updatePreview();
   }
   restoreLogo();
+  fitPreview();
   loadDownloadCount();
   console.log("✓ TRAcad Assignment Cover Studio initialized");
 }
